@@ -61,7 +61,7 @@ function db_destroy_create_database() {
         printf("[DEBUG] The query was:\n%s", $query);
       }
 
-      die;
+      exit(1);
     }
 
     $query = "CREATE TABLE `${table}` (\n";
@@ -84,7 +84,7 @@ function db_destroy_create_database() {
         printf("[DEBUG] The query was:\n%s\n", $query);
       }
 
-      die;
+      exit(1);
     }
 
     if (DEBUG_MODE) {
@@ -100,15 +100,27 @@ function db_destroy_create_database() {
  */
 if (!isset($argv[1])) {
   printf("Usage: php %s <arg>\n", basename(__FILE__));
-  die;
+  exit(0);
 }
 
 switch ($argv[1]) {
 case 'dropdb':
-  db_destroy_create_database();
+  printf("This will destroy the database and create clean tables on top. Are you sure? [y/N]");
+
+  $confirmation = trim(fgets(STDIN));
+  if ($confirmation !== 'y') {
+    exit(0);
+  }
+  else {
+    printf("Destroying and re-creating database, as requested.\n");
+
+    db_destroy_create_database();
+  }
 
   break;
+
 default:
   printf("Invalid argument.\n");
 }
 
+exit(0);
