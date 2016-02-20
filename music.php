@@ -8,7 +8,9 @@
 
 require_once dirname(__FILE__) . '/inc/config.php';
 
+require_once ROOT_PATH . '/inc/misc.php';
 require_once ROOT_PATH . '/inc/db.php';
+require_once ROOT_PATH . '/inc/music_scan.php';
 
 // define database schema
 $db_schema = array(
@@ -116,6 +118,11 @@ case 'dropdb':
 
     db_destroy_create_database();
   }
+
+  break;
+
+case 'scan':
+  db_music_scan();
 
   break;
 
