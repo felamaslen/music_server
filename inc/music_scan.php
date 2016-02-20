@@ -110,6 +110,7 @@ function get_track_info($file) {
     'album'         => 'Unknown Album',
     'genre'         => '',
     'date'          => '',
+    'filename'      => $file,
     'format'        => $extension,
   );
 
@@ -167,6 +168,74 @@ function get_track_info($file) {
 }
 
 /**
+ * Finds songs in the file system which do not exist in the database
+ */
+function find_new_songs($db_files, $music_files) {
+  $db_add = array_diff($music_files, $db_files);
+
+  return $db_add;
+}
+
+/**
+ * Get tags for a list of songs
+ */
+function get_song_tags($files) {
+  $songs = array();
+
+  $k = 0;
+  $n = count($files);
+
+  foreach ($files as $file) {
+    $k++;
+
+    progress_bar($k, $n, 30);
+
+    $songs[] = get_track_info($file);
+  }
+
+  return $songs;
+}
+
+/**
+ * Adds songs to database
+ */
+function add_new_songs($songs) {
+  if (count($songs) > 0) {
+    notice(1, '[%s] Adding new songs to database...', date(DATE_FORMAT));
+    
+    $query = "INSERT INTO {music} (
+      {track},
+      {time},
+      {filesize},
+      {title},
+      {artist},
+      {album_artist},
+      {album},
+      {genre},
+      {date},
+      {filename},
+      {format}
+    ) VALUES " . implode(',', array_map(function($item) {
+        
+      return '(' . implode(',', array_map(function($sub_item) {
+        
+        return (is_int($sub_item) ? $sub_item : '"' . db_escape_string($sub_item) . '"') . "\n";
+
+      }, $item)) . ")\n";
+
+    }, $songs));
+
+    if (!db_query($query)) {
+      notice(4, 'Error with database query!');
+
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+/**
  * Deletes files from the database which are no longer
  * present on the file system
  */
@@ -202,6 +271,19 @@ function db_music_scan() {
   // find files in the database which do not exist
   notice(1, '[%s] Finding extraneous DB entries...', date(DATE_FORMAT));
   delete_extraneous_db_entries($db_files, $music_files);
+
+  // find files in the file system which do not exist
+  notice(1, '[%s] Finding new songs...', date(DATE_FORMAT));
+  $new_songs_files = find_new_songs($db_files, $music_files);
+
+  if (count($new_songs_files) > 0) {
+    notice(1, '[%s] Finding new songs\' tags...', date(DATE_FORMAT));
+    $new_songs = get_song_tags($new_songs_files);
+
+    add_new_songs($new_songs);
+  }
+
+  printf("[%s] Done!\n", date(DATE_FORMAT));
 
   $db->close();
 }

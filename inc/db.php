@@ -58,6 +58,10 @@ function _db_query($query, $debug = 0) {
 
   $result = $db->query($query);
 
+  if (!!$db->errno) {
+    file_put_contents(ROOT_PATH . '/query.txt', $query);
+  }
+
   return !$db->errno ? $result : FALSE;
 }
 
@@ -111,6 +115,6 @@ function db_encode_blob($string) {
 }
 
 function db_prefix_tables($sql) {
-  return strtr($sql, array('{' => '', '}' => ''));
+  return strtr($sql, array('{' => '`', '}' => '`'));
 }
 
