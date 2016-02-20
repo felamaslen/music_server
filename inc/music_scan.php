@@ -20,11 +20,34 @@ function get_music_files($dir, &$files, $level = 0) {
   $handle = opendir($dir);
 
   if (!$handle) {
+    notice(3, 'Failed opening directory: %s', $dir);
     return 1;
   }
 
+  // get the number of files in the top-level directory,
+  // so we can estimate the progress
+  if ($level === 0) {
+    $num_files = 0;
+    while (FALSE !== $file = readdir($handle)) {
+      if ($file != '.' && $file != '..') {
+        $num_files++;
+      }
+    }
+    
+    $k = 1;
+  }
+
+
+  rewinddir($handle);
+
   while (FALSE !== ($file = readdir($handle))) {
     if ($file != '.' && $file != '..') {
+      if ($level === 0) {
+        progress_bar($k, $num_files, 30);
+        
+        $k++;
+      }
+
       $path = $dir . '/' . $file;
 
       if (is_dir($path)) {
@@ -152,16 +175,12 @@ function db_music_scan() {
 
   db_connect();
 
-  /*
+  notice(1, '[%s] Scanning music directory...', date(DATE_FORMAT));
   $music_files = array();
   get_music_files(MUSIC_DIR, $music_files);
 
-  // print_r(array_slice($music_files, 0, 5));
-
+  notice(1, '[%s] Scanning music database...', date(DATE_FORMAT));
   $db_files = get_db_files();
-   */
-
-  get_track_info('/data/user/music/ogg/Lorde/Pure Heroine/Tennis Court.ogg');
 
   $db->close();
 }
