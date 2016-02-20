@@ -82,7 +82,7 @@ function get_db_files() {
   $files = array();
 
   while ($row = $result->fetch_assoc()) {
-    array_push($files, $row->filename);
+    array_push($files, $row['filename']);
   }
 
   return $files;
@@ -167,6 +167,23 @@ function get_track_info($file) {
 }
 
 /**
+ * Deletes files from the database which are no longer
+ * present on the file system
+ */
+function delete_extraneous_db_entries($db_files, $music_files) {
+  $db_delete = array_diff($db_files, $music_files);
+
+  $query = 'DELETE FROM {music} WHERE ' .
+    implode(' OR ', array_map(function($item) {
+      return "{filename} = '%s'";
+    }, $db_delete));
+
+  db_query($query, $db_delete);
+
+  return 0;
+}
+
+/**
  * Scans the filesystem for new music files, and
  * deletes files from the database which no longer exist
  */
@@ -181,6 +198,10 @@ function db_music_scan() {
 
   notice(1, '[%s] Scanning music database...', date(DATE_FORMAT));
   $db_files = get_db_files();
+
+  // find files in the database which do not exist
+  notice(1, '[%s] Finding extraneous DB entries...', date(DATE_FORMAT));
+  delete_extraneous_db_entries($db_files, $music_files);
 
   $db->close();
 }
