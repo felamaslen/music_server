@@ -7,6 +7,35 @@
  * Miscellaneous functions
  */
 
+// formats $seconds into hh:mm:ss
+function time_format($seconds) {
+  $s = $seconds % 60;
+
+  $m = floor($seconds / 60);
+
+  $h = floor($seconds / 3600);
+
+  if ($s < 10) {
+    $s = '0' . $s;
+  }
+
+  if ($m < 10) {
+    $m = '0' . $m;
+  }
+
+  $values = array($m, $s);
+
+  if ($h > 0) {
+    if ($h < 10) {
+      $h = '0' . $h;
+    }
+
+    array_unshift($values, $h);
+  }
+
+  return implode(':', $values);
+}
+
 /**
  * errors and other logging
  */

@@ -50,6 +50,76 @@ case 'play':
   die;
 
   break;
+
+case 'list-artist-album-songs':
+  if (!isset($_GET['artist']) || !isset($_GET['album'])) {
+    http_quit(400);
+  }
+
+  $artist = urldecode($_GET['artist']);
+  $album = urldecode($_GET['album']);
+
+  $query = db_query('
+    SELECT id, track, title, artist, date, time
+    FROM {music}
+    WHERE {artist} = "%s" AND {album} = "%s"',
+    $artist, $album) or http_quit(500, 'Database error');
+
+  $songs = array();
+
+  while (NULL !== ($row = $query->fetch_assoc())) {
+    array_push($songs, array(
+      'id'      => (int)$row['id'],
+      'track'   => (int)$row['track'],
+      'title'   => $row['title'],
+      'artist'  => $row['artist'],
+      'date'    => $row['date'],
+      'time'    => time_format((int)$row['time']),
+    ));
+  }
+
+  print json_encode($songs);
+
+  break;
+
+case 'list-artist-albums':
+  if (!isset($_GET['artist'])) {
+    http_quit(400);
+  }
+
+  $artist = urldecode($_GET['artist']);
+
+  $query = db_query('
+    SELECT DISTINCT {album} FROM {music}
+    WHERE {artist} = "%s"
+    ORDER BY {album}', $artist)
+    or http_quit(500, 'Database error');
+
+  $albums = array();
+
+  while (NULL !== ($row = $query->fetch_assoc())) {
+    array_push($albums, $row['album']);
+  }
+
+  print json_encode($albums);
+
+  break;
+
+case 'list-artists':
+
+  $query = db_query('SELECT DISTINCT {artist} FROM {music} ORDER BY {artist}')
+    or http_quit(500, 'Database error');
+
+  $artists = array();
+
+  while (NULL !== ($row = $query->fetch_assoc())) {
+    array_push($artists, $row['artist']);
+  }
+
+  print json_encode($artists);
+
+  break;
+
 default:
   http_quit(400);
 }
