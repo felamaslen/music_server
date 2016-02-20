@@ -57,11 +57,9 @@ function db_destroy_create_database() {
     $drop_result = $db->query($query);
 
     if (!$drop_result) {
-      printf("[FATAL] Error dropping table %s\n", $table);
-      
-      if (DEBUG_MODE) {
-        printf("[DEBUG] The query was:\n%s", $query);
-      }
+      notice(4, "Error dropping table %s", $table);
+
+      notice(0, "The query was:\n%s", $query);
 
       exit(1);
     }
@@ -80,18 +78,14 @@ function db_destroy_create_database() {
     $create_result = $db->query($query);
 
     if (!$create_result) {
-      printf("[FATAL] Error creating table %s\n", $table);
+      notice(4, "Error creating table %s", $table);
 
-      if (DEBUG_MODE) {
-        printf("[DEBUG] The query was:\n%s\n", $query);
-      }
+      notice(0, "The query was:\n%s", $query);
 
       exit(1);
     }
 
-    if (DEBUG_MODE) {
-      printf("[DEBUG] Re-created clean table: %s\n", $table);
-    }
+    notice(0, "Re-created clean table: %s", $table);
   }
 
   $db->close();

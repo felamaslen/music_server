@@ -25,10 +25,12 @@ function db_connect() {
   );
 
   if ($db->connect_errno > 0) {
-    die('Unable to connect to database [' . $db->connect_error . ']');
+    notice(4, "Error %d: Unable to connect to database", $db->connect_errno);
+
+    exit(1);
   }
 
-  return NULL;
+  return 0;
 }
 
 /**
@@ -41,6 +43,8 @@ function db_query($query) {
   if (isset($args[0]) && is_array($args[0])) { // 'All arguments in one array' syntax
     $args = $args[0];
   }
+  
+  $query = db_prefix_tables($query);
 
   _db_query_callback($args, TRUE);
   
@@ -104,5 +108,9 @@ function db_escape_string($string) {
 
 function db_encode_blob($string) {
   return '%b';
+}
+
+function db_prefix_tables($sql) {
+  return strtr($sql, array('{' => '', '}' => ''));
 }
 

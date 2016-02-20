@@ -12,7 +12,7 @@
  * (recursively)
  */
 function get_music_files($dir, &$files, $level = 0) {
-  notice(0, "Scan: %s", $dir);
+  notice(0, 'Scan: %s', $dir);
 
   $handle = opendir($dir);
 
@@ -42,10 +42,35 @@ function get_music_files($dir, &$files, $level = 0) {
   return 0;
 }
 
+/**
+ * gets an array of every single music file in the database
+ */
+function get_db_files() {
+  $result = db_query('SELECT {filename} FROM {music}');
+
+  if (!$result) {
+    notice(4, 'Error fetching information from the database!');
+    exit(1);
+  }
+
+  $files = array();
+
+  while ($row = $result->fetch_assoc()) {
+    array_push($files, $row->filename);
+  }
+
+  return $files;
+}
+
+
 function db_music_scan() {
+  db_connect();
+
   $music_files = array();
   get_music_files(MUSIC_DIR, $music_files);
 
-  // print_r($music_files);
+  // print_r(array_slice($music_files, 0, 5));
+
+  $db_files = get_db_files();
 }
 
