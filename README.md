@@ -1,6 +1,9 @@
 # music_server
 Web-based music server
 
+Credits:
+  - getID3 for music tag reading
+
 Web usage: self-explanatory
 
 CLI usage:

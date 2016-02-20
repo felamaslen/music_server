@@ -25,3 +25,17 @@ function notice() {
 
   return 0;
 }
+
+function get_file_extension($file) {
+  return strtolower(substr($file, strrpos($file, '.') + 1));
+}
+
+function format_track_number($raw) {
+  $number = $raw;
+  if (strpos($raw, '/') !== FALSE) {
+    $number = substr($number, 0, strpos($raw, '/'));
+  }
+
+  return (int)$number;
+}
+

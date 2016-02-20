@@ -19,6 +19,7 @@ $db_schema = array(
       array('key' => 'id',            'opt' => 'int(11) unsigned NOT NULL AUTO_INCREMENT'),
       array('key' => 'track',         'opt' => 'int(11) NOT NULL'),
       array('key' => 'time',          'opt' => 'int(11) NOT NULL'),
+      array('key' => 'filesize',      'opt' => 'int(11) NOT NULL'),
       array('key' => 'rating',        'opt' => 'tinyint(4) NOT NULL'),
       array('key' => 'title',         'opt' => 'varchar(255) COLLATE utf8_unicode_ci NOT NULL'),
       array('key' => 'artist',        'opt' => 'varchar(255) COLLATE utf8_unicode_ci NOT NULL'),
@@ -125,3 +126,4 @@ default:
 }
 
 exit(0);
+
