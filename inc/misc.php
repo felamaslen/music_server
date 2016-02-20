@@ -30,6 +30,22 @@ function notice() {
 }
 
 /**
+ * Send headers for error codes (to browser)
+ */
+function http_quit($code, $msg = '') {
+  $codes = array(
+    400 => 'Bad Request',
+    403 => 'Access Denied',
+    404 => 'Not Found',
+    500 => 'Internal Server Error',
+  );
+
+  header("HTTP/1.1 ${code} ${codes[$code]}");
+
+  die($msg);
+}
+
+/**
  * gets the file extension from a path
  */
 function get_file_extension($file) {

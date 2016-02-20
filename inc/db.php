@@ -58,10 +58,6 @@ function _db_query($query, $debug = 0) {
 
   $result = $db->query($query);
 
-  if (!!$db->errno) {
-    file_put_contents(ROOT_PATH . '/query.txt', $query);
-  }
-
   return !$db->errno ? $result : FALSE;
 }
 
