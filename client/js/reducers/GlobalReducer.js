@@ -1,0 +1,195 @@
+import {
+  // App actions
+  APP_SPINNER_HIDDEN,
+  APP_EVENT_HANDLER_STORED,
+  APP_SLIDER_CLICKED,
+  APP_MENU_TOGGLED,
+  APP_NOTIFICATIONS_ALLOWED,
+  APP_SETTINGS_APPLIED,
+  APP_SETTINGS_REQUESTED,
+  APP_EVENT_RESIZED,
+
+  // Search actions
+  SEARCH_QUERY_RECEIVED,
+  SEARCH_VALUE_SET,
+  SEARCH_SUGGESTIONS_RECEIVED,
+  SEARCH_RESULT_SELECTED,
+  SEARCH_RESULT_HOVERED,
+
+  // Audio actions
+  AUDIO_STREAM_CANPLAY,
+  AUDIO_STREAM_BEGAN,
+  AUDIO_DURATION_SET,
+  AUDIO_ERROR_OCCURRED,
+  AUDIO_STREAM_PROGRESSED,
+  AUDIO_TIME_UPDATED,
+  AUDIO_VOLUME_SET,
+
+  // Browser actions
+  BROWSER_RESIZED,
+  BROWSER_ARTISTS_REQUESTED,
+  BROWSER_ARTISTS_FETCHED,
+  BROWSER_ARTIST_SELECTED,
+  BROWSER_ALBUM_SELECTED,
+
+  // Player actions
+  PLAYER_SONGS_ADDED,
+  PLAYER_QUEUEITEM_PLAYED,
+  PLAYER_SONG_PLAYED,
+  PLAYER_PAUSE_TOGGLED,
+  PLAYER_POSITION_SEEKED,
+  PLAYER_CTRL_PREVIOUS_CLICKED,
+  PLAYER_CTRL_NEXT_CLICKED,
+
+  // SongList actions
+  LIST_REQUESTED_FROM_BROWSER,
+  LIST_SONG_SELECTED,
+  LIST_COL_RESIZED,
+  LIST_SORTED
+} from '../constants/actions';
+
+import {
+  hideSpinner,
+  storeEventHandler,
+  sliderClicked,
+  userMenuToggle,
+  canNotify,
+  setSettings,
+  getSettings,
+  resizeGlobal
+} from './AppReducer';
+
+import {
+  searchValueSet,
+  searchQueryReceived,
+  searchSuggestionsReceived,
+  searchResultSelected,
+  searchItemHovered
+} from './SearchReducer';
+
+import {
+  audioCanPlay,
+  audioLoadStart,
+  audioDurationChange,
+  audioError,
+  audioProgress,
+  audioTimeUpdate,
+  audioVolumeChange
+} from './AudioReducer';
+
+import {
+  browserResized,
+  loadListArtists,
+  gotListArtists,
+  selectArtist,
+  selectAlbum,
+  insertBrowserResults
+} from './BrowserReducer';
+
+import {
+  addToQueue,
+  playQueueItem,
+  playListItem,
+  togglePause,
+  ctrlPrevious,
+  ctrlNext,
+  ctrlSeek,
+} from './PlayerReducer';
+
+import {
+  selectSong,
+  columnResized,
+  sortSongList
+} from './SongListReducer';
+
+export default (reduction, action) => {
+  switch (action.type) {
+  // App actions
+  case APP_SPINNER_HIDDEN:
+    return hideSpinner(reduction);
+  case APP_EVENT_HANDLER_STORED:
+    // store all bound events which might need to be de-bound in the appState
+    return storeEventHandler(reduction, action.payload);
+  case APP_SLIDER_CLICKED:
+    return sliderClicked(reduction, action.payload);
+  case APP_MENU_TOGGLED:
+    return userMenuToggle(reduction, action.payload);
+  case APP_NOTIFICATIONS_ALLOWED:
+    return canNotify(reduction);
+  case APP_SETTINGS_APPLIED:
+    return setSettings(reduction);
+  case APP_SETTINGS_REQUESTED:
+    return getSettings(reduction);
+  case APP_EVENT_RESIZED:
+    return resizeGlobal(reduction);
+
+  // Search actions
+  case SEARCH_QUERY_RECEIVED:
+    return searchQueryReceived(reduction);
+  case SEARCH_VALUE_SET:
+    return searchValueSet(reduction, action.payload);
+  case SEARCH_SUGGESTIONS_RECEIVED:
+    return searchSuggestionsReceived(reduction, action.payload);
+  case SEARCH_RESULT_SELECTED:
+    return searchResultSelected(reduction);
+  case SEARCH_RESULT_HOVERED:
+    return searchItemHovered(reduction, action.payload);
+
+  // Audio actions
+  case AUDIO_STREAM_CANPLAY:
+    return audioCanPlay(reduction);
+  case AUDIO_STREAM_BEGAN:
+    return audioLoadStart(reduction);
+  case AUDIO_DURATION_SET:
+    return audioDurationChange(reduction, action.payload);
+  case AUDIO_ERROR_OCCURRED:
+    return audioError(reduction);
+  case AUDIO_STREAM_PROGRESSED:
+    return audioProgress(reduction, action.payload);
+  case AUDIO_TIME_UPDATED:
+    return audioTimeUpdate(reduction, action.payload);
+  case AUDIO_VOLUME_SET:
+    return audioVolumeChange(reduction, action.payload);
+
+  // Browser actions
+  case BROWSER_RESIZED:
+    return browserResized(reduction, action.payload);
+  case BROWSER_ARTISTS_REQUESTED:
+    return loadListArtists(reduction);
+  case BROWSER_ARTISTS_FETCHED:
+    return gotListArtists(reduction, action.payload);
+  case BROWSER_ARTIST_SELECTED:
+    return selectArtist(reduction, action.payload);
+  case BROWSER_ALBUM_SELECTED:
+    return selectAlbum(reduction, action.payload);
+
+  // Player actions
+  case PLAYER_SONGS_ADDED:
+    return addToQueue(reduction, action.payload);
+  case PLAYER_QUEUEITEM_PLAYED:
+    return playQueueItem(reduction, action.payload);
+  case PLAYER_SONG_PLAYED:
+    return playListItem(reduction, action.payload);
+  case PLAYER_PAUSE_TOGGLED:
+    return togglePause(reduction, action.payload);
+  case PLAYER_POSITION_SEEKED:
+    return ctrlSeek(reduction, action.payload);
+  case PLAYER_CTRL_PREVIOUS_CLICKED:
+    return ctrlPrevious(reduction);
+  case PLAYER_CTRL_NEXT_CLICKED:
+    return ctrlNext(reduction, action.payload);
+
+  // SongList actions
+  case LIST_REQUESTED_FROM_BROWSER:
+    return insertBrowserResults(reduction, action.payload);
+  case LIST_SONG_SELECTED:
+    return selectSong(reduction, action.payload);
+  case LIST_COL_RESIZED:
+    return columnResized(reduction, action.payload);
+  case LIST_SORTED:
+    return sortSongList(reduction, action.payload);
+
+  default:
+    return reduction;
+  }
+};
