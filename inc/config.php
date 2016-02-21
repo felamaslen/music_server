@@ -28,3 +28,4 @@ $db_info = array(
  *****************************/
 define('ROOT_PATH', dirname(dirname(__FILE__)));
 
+define('GET_ALL_SONGS', FALSE);
