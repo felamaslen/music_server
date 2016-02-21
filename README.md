@@ -7,8 +7,8 @@ Credits:
 Web usage: self-explanatory
 
 CLI usage:
-  1. scripts/db.php
-    `php scripts/db.php`
-    Arguments:
-      `dropdb`: Clears the database and sets fresh data (TODO)
+  `php music.php`
+  Arguments:
+    `dropdb`: Clears the database and sets fresh data
+    `scan`: Scans the music directory for new files
 
