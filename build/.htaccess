@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  RewriteRule ^api$ api.php [L,QSA]
+  RewriteRule ^api\/(.*)$ api.php?q=$1 [L,QSA]
+</IfModule>

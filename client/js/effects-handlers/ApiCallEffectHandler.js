@@ -54,7 +54,8 @@ export default buildEffectHandler({
       params.push(query.albums);
     }
 
-    const queryString = encodeURI(params.map(item => encodeURIComponent(item))
+    const queryString = encodeURI(params
+      .map(item => encodeURIComponent(item))
       .reduce((r, s) => r + '/' + s)
     );
 
