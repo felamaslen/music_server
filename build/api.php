@@ -265,7 +265,7 @@ else {
       $term = $_query[2];
 
       $q_artists  = _search_suggestions_query('artist', array('artist'), $term);
-      $q_albums   = _search_suggestions_query('album',  array('album'), $term);
+      $q_albums   = _search_suggestions_query('album',  array('artist', 'album'), $term);
       $q_songs    = _search_suggestions_query('title',  array(
         'id', 'title', 'artist', 'album'
       ), $term);
@@ -278,7 +278,7 @@ else {
         array_push($artists, $row->artist);
       }
       while (NULL !== ($row = $q_albums->fetch_object())) {
-        array_push($albums, $row->album);
+        array_push($albums, array('artist' => $row->artist, 'album' => $row->album));
       }
 
       while (NULL !== ($row = $q_songs->fetch_object())) {

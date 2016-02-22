@@ -38,7 +38,6 @@ export const gotListArtists = (reduction, response) => {
 };
 
 export const selectArtist = (reduction, evt) => {
-  console.debug('selectArtist');
   const oldSelectedArtists = reduction.getIn(['appState', 'browser', 'selectedArtists']);
 
   let effects = reduction.get('effects');
@@ -144,7 +143,6 @@ export const selectAlbum = (reduction, evt) => {
 };
 
 export const insertBrowserResults = (reduction, response) => {
-  console.debug('insertBrowserResults');
   const error = !response || typeof response.data !== 'object';
 
   const songs = error

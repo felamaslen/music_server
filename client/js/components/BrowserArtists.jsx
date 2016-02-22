@@ -31,8 +31,7 @@ export default class BrowserArtists extends PureControllerView {
     );
 
     const artistList = _list.map((artist, index) => {
-      const liClass = itemInRanges(this.props.selected, index - 1) > -1
-        ? 'selected' : '';
+      const liClass = itemInRanges(this.props.selected, index - 1) > -1 ? 'selected' : '';
 
       return (
         <li onMouseDown={this._selectArtist.bind(this, index)}
@@ -56,7 +55,6 @@ export default class BrowserArtists extends PureControllerView {
   }
 
   _selectArtist(index, ev) {
-    console.debug('_selectArtist', index, ev.ctrlKey, ev.shiftKey);
     this.dispatchAction(selectArtist({
       ctrl: ev.ctrlKey,
       shift: ev.shiftKey,

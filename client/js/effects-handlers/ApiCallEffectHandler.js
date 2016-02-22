@@ -37,7 +37,6 @@ export default buildEffectHandler({
   },
 
   [LIST_BROWSER_API_CALL]: (query, dispatcher) => {
-    console.debug('LIST_BROWSER_API_CALL');
     const params = [];
     if (!!query.artists) {
       params.push('artists');
@@ -55,19 +54,14 @@ export default buildEffectHandler({
       .reduce((r, s) => r + '/' + s)
     );
 
-    console.debug('Starting axios request');
-    window.setTimeout(() => {
-      axios.get(API_LIST_SONGS_FROM_BROWSER + queryString, {
+    axios.get(API_LIST_SONGS_FROM_BROWSER + queryString, {
       params: { artistChanged: !!query.artistChanged ? 'true' : 'false' }
-      }).then(
-        response => {
-          console.debug('API_LIST_SONGS_FROM_BROWSER response');
-
-          dispatcher.dispatch(insertBrowserResults(response));
-        }
-      ).catch(
-        () => dispatcher.dispatch(insertBrowserResults(null))
-      );
-    }, 0);
+    }).then(
+      response => {
+        dispatcher.dispatch(insertBrowserResults(response));
+      }
+    ).catch(
+      () => dispatcher.dispatch(insertBrowserResults(null))
+    );
   }
 });
