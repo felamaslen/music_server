@@ -9,7 +9,7 @@ import {
   searchQueryReceived,
   searchSuggestionsReceived,
   searchHoverItem,
-  searchSelectResult:
+  searchSelectResult
 } from '../actions/SearchActions';
 
 import PureControllerView from './PureControllerView';
