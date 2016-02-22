@@ -3,7 +3,9 @@ const gutil = require('gulp-util');
 const webpack = require('webpack-stream');
 const WebpackDevServer = require('webpack-dev-server');
 
-const webpackConfig = require('./webpack.config.js');
+var webpackConfig = require('./webpack.config.js');
+
+webpackConfig.module.loaders[0].loaders.unshift('uglify-loader');
 
 gulp.task('default', function() {
   // builds the client into build/

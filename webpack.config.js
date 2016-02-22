@@ -1,6 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const babelSettings = {
+  presets: ['es2015', 'react']
+};
+
 module.exports = {
   entry: './client/js/index.jsx',
   output: { path: __dirname + '/build', filename: 'bundle.js' },
@@ -8,11 +12,8 @@ module.exports = {
     loaders: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
-        exclude: '/node_modules/',
-        query: {
-          presets: ['es2015', 'react']
-        }
+        loaders: ['babel?' + JSON.stringify(babelSettings)],
+        exclude: '/node_modules/'
       },
       {
         test: /\.css$/,
