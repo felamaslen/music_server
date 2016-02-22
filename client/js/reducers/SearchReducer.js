@@ -43,8 +43,7 @@ export const searchQueryReceived = reduction => {
     .set(
       'effects',
       reduction.get('effects').push(buildMessage(SEARCH_SUGGESTIONS_API_CALL, {
-        searchValue: searchValue,
-        token: reduction.getIn(['appState', 'auth', 'token'])
+        searchValue: searchValue
       }))
     )
     .setIn(['appState', 'search', 'loading'], true)
@@ -102,7 +101,6 @@ export const searchResultSelected = reduction => {
       newEffect = buildMessage(
         LIST_BROWSER_API_CALL,
         {
-          token: reduction.getIn(['appState', 'auth', 'token']),
           artists: encodeURIComponent(item),
           artistChanged: 'false'
         }

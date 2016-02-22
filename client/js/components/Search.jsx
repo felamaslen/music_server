@@ -9,7 +9,7 @@ import {
   searchQueryReceived,
   searchSuggestionsReceived,
   searchHoverItem,
-  searchSelectResult
+  searchSelectResult:
 } from '../actions/SearchActions';
 
 import PureControllerView from './PureControllerView';
@@ -88,6 +88,8 @@ export default class Search extends PureControllerView {
 
     const results = this.props.results.map((list, listIndex) => {
       const key = searchResultsKeys[listIndex];
+
+      console.debug(listIndex, list.toJS(), resultList);
 
       return list.size ? (
         <ul className={key} key={key}>{resultList[listIndex](list)}</ul>

@@ -25,10 +25,7 @@ export const loadListArtists = reduction => {
   return reduction
     .set('effects', reduction
       .get('effects')
-      .push(buildMessage(
-        BROWSER_ARTISTS_API_CALL,
-        reduction.getIn(['appState', 'auth', 'token'])
-      ))
+      .push(buildMessage(BROWSER_ARTISTS_API_CALL))
     );
 };
 
@@ -41,6 +38,7 @@ export const gotListArtists = (reduction, response) => {
 };
 
 export const selectArtist = (reduction, evt) => {
+  console.debug('selectArtist');
   const oldSelectedArtists = reduction.getIn(['appState', 'browser', 'selectedArtists']);
 
   let effects = reduction.get('effects');
@@ -73,7 +71,6 @@ export const selectArtist = (reduction, evt) => {
     effects = effects.push(buildMessage(
       LIST_BROWSER_API_CALL,
       {
-        token: reduction.getIn(['appState', 'auth', 'token']),
         artists: artists.map(encodeURIComponent).join(','),
         artistChanged: 'true'
       })
@@ -131,7 +128,6 @@ export const selectAlbum = (reduction, evt) => {
     effects = effects.push(buildMessage(
       'LIST_BROWSER_API_CALL',
       {
-        token: reduction.getIn(['appState', 'auth', 'token']),
         artists: currentArtists.map(encodeURIComponent).join(','),
         albums: albums.map(encodeURIComponent).join(',')
       })
@@ -148,6 +144,7 @@ export const selectAlbum = (reduction, evt) => {
 };
 
 export const insertBrowserResults = (reduction, response) => {
+  console.debug('insertBrowserResults');
   const error = !response || typeof response.data !== 'object';
 
   const songs = error

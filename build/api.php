@@ -11,6 +11,10 @@ require_once dirname(__FILE__) . '/../inc/config.php';
 require_once ROOT_PATH . '/inc/db.php';
 require_once ROOT_PATH . '/inc/misc.php';
 
+// this has to be something that will *never* occur in something like
+// an artist's or album's name
+define('URI_SEPARATOR', '__@@__');
+
 function _search_suggestions_query($compare, $fields, $term) {
   $fields = implode(',', array_map(function($item) {
     return '{' . $item . '}';
@@ -107,8 +111,8 @@ function _list_songs_from_browser($_query) {
     ));
   }
   else {
-    $artists  = $have_artists ? explode(',', $req_artists) : array();
-    $albums   = $have_albums  ? explode(',', $req_albums)  : array();
+    $artists  = $have_artists ? explode(URI_SEPARATOR, $req_artists) : array();
+    $albums   = $have_albums  ? explode(URI_SEPARATOR, $req_albums)  : array();
 
     $fields = '{id}, {track}, {title}, {artist}, {album}, {genre}, {date}';
 
@@ -135,6 +139,8 @@ function _list_songs_from_browser($_query) {
     }
 
     $songs_query .= implode(' AND ', $and);
+
+    $songs_query .= ' ORDER BY {artist}, {album}, {track}';
 
     array_unshift($args_songs_query, $songs_query);
 
@@ -199,7 +205,7 @@ if (!isset($_GET['q'])) {
 }
 else {
   $_query = array_map(function($item) {
-    return rawurldecode($item);
+    return urldecode(str_replace(',', URI_SEPARATOR, $item));
   }, explode('/', isset($_GET['q']) ? $_GET['q'] : ''));
 
   switch ($_query[0]) {

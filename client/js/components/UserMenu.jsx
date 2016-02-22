@@ -11,10 +11,6 @@ import {
   userMenuToggle
 } from '../actions/AppActions';
 
-import {
-  logout
-} from '../actions/LoginActions';
-
 export default class UserMenu extends PureControllerView {
   componentWillMount() {
     this.dispatchNext(storeEventHandler({

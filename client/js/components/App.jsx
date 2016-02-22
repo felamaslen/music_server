@@ -159,7 +159,6 @@ export default class App extends Component {
         setTime={this.state.reduction.getIn(['appState', 'player', 'setTime'])}
         paused={this.state.reduction.getIn(['appState', 'player', 'paused'])}
         volume={this.state.reduction.getIn(['appState', 'player', 'volume'])}
-        token={this.state.reduction.getIn(['appState', 'auth', 'token'])}
       />
     );
 

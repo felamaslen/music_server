@@ -43,9 +43,9 @@ export default new Record({
       // for ordering the columns
       // 1 is ascending, -1 is descending
       orderBy: [
-        ['artist', 0],
-        ['album', 0],
-        ['track', 0],
+        ['artist', 1],
+        ['album', 1],
+        ['track', 1],
         ['title', 0],
         ['genre', 0]
       ],

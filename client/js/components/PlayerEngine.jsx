@@ -85,8 +85,8 @@ export default class PlayerEngine extends PureControllerView {
 
   render() {
     const source = this.props.currentSong === null ? false : (
-      <source ref="source1" type="audio/mpeg"
-        src={STREAM_URL + this.props.currentSong.get('id') + '?token=' + this.props.token}
+      <source ref="source1" type="audio/ogg"
+        src={STREAM_URL + this.props.currentSong.get('id')}
       />
     );
 
@@ -160,7 +160,6 @@ PlayerEngine.propTypes = {
   paused: PropTypes.bool,
   volume: PropTypes.number,
   setTime: PropTypes.number,
-  token: PropTypes.string,
   currentSong: PropTypes.instanceOf(Map)
 };
 

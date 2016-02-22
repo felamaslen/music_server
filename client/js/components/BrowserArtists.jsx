@@ -56,6 +56,7 @@ export default class BrowserArtists extends PureControllerView {
   }
 
   _selectArtist(index, ev) {
+    console.debug('_selectArtist', index, ev.ctrlKey, ev.shiftKey);
     this.dispatchAction(selectArtist({
       ctrl: ev.ctrlKey,
       shift: ev.shiftKey,

@@ -132,13 +132,19 @@ export function sliderOnShouldComponentUpdate(nextProps) {
   return true;
 }
 
+const toIntIfNumeric = value => {
+  const intValue = parseInt(value);
+
+  return isNaN(intValue) ? value : intValue;
+}
+
 export const _sortSongList = (songs, orderBy) => {
   return songs.sort((a, b) => {
     const columnKey = orderBy.findIndex(column => {
-      const valueA = a.get(column.first());
-      const valueB = b.get(column.first());
+      const valueA = toIntIfNumeric(a.get(column.first()));
+      const valueB = toIntIfNumeric(b.get(column.first()));
 
-      return column.last() && (valueA > valueB || valueA < valueB);
+      return column.last() !== 0 && (valueA > valueB || valueA < valueB);
     });
 
     if (columnKey < 0) {
@@ -148,8 +154,8 @@ export const _sortSongList = (songs, orderBy) => {
     const column = orderBy.get(columnKey).first();
     const direction = orderBy.get(columnKey).last();
 
-    const valueA = a.get(column);
-    const valueB = b.get(column);
+    const valueA = toIntIfNumeric(a.get(column));
+    const valueB = toIntIfNumeric(b.get(column));
 
     return direction * (valueA > valueB ? 1 : -1);
   });
