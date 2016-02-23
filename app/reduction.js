@@ -13,7 +13,9 @@ export default new Record({
   appState: fromJS({
     page: startingPage,
     browser: {
-      artists: []
+      artists: [],
+      albums: {}, // map of artist -> albums (List)
+      tracks: []
     }
   }),
   effects: List.of()

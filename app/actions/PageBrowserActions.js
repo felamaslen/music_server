@@ -7,7 +7,8 @@ import buildMessage from '../MessageBuilder';
 
 import {
   BROWSER_LIST_ARTISTS_REQUESTED,
-  BROWSER_API_LIST_ARTISTS_RECEIVED
+  BROWSER_API_LIST_ARTISTS_RECEIVED,
+  BROWSER_LIST_ALBUMS_REQUESTED
 } from '../constants/actions';
 
 export const listArtistsRequested = () =>
@@ -15,4 +16,8 @@ export const listArtistsRequested = () =>
 
 export const apiReceivedListArtists = response =>
   buildMessage(BROWSER_API_LIST_ARTISTS_RECEIVED, response);
+
+export const listAlbumsRequested = param =>
+  buildMessage(BROWSER_LIST_ALBUMS_REQUESTED, param);
+
 

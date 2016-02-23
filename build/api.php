@@ -333,6 +333,30 @@ else {
 
       break;
 
+    case 'artist_albums':
+      // get a list of albums of a particular artist
+      if (!isset($_query[2])) {
+        http_quit(400, 'Must provide artist!');
+      }
+
+      $artist = urldecode($_query[2]);
+
+      $query = db_query('
+        SELECT DISTINCT {album}
+        FROM {music}
+        WHERE {artist} = "%s"
+        ORDER BY {album}
+      ', $artist);
+
+      $albums = array();
+      while (NULL !== ($row = $query->fetch_object())) {
+        array_push($albums, $row->album);
+      }
+
+      print json_encode($albums);
+
+      break;
+
     default:
       http_quit(400, 'Invalid list argument');
     }
