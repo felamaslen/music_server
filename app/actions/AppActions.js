@@ -1,3 +1,8 @@
+/**
+ * @file app/actions/AppActions
+ * Top level actions
+ */
+
 import buildMessage from '../MessageBuilder';
 
 import {

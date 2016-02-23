@@ -1,3 +1,9 @@
+/**
+ * @file app/components/App.jsx
+ * Builds the main application by running the actions (via globalReducer)
+ * and loading other components
+ */
+
 import { } from 'immutable';
 import React, { Component } from 'react';
 import { Dispatcher } from 'flux';
@@ -6,6 +12,9 @@ import globalReducer from '../reducers/GlobalReducer';
 
 import {
 } from '../actions/AppActions';
+
+// load other components
+import PageBrowser from './PageBrowser.jsx';
 
 import apiCallEffectHandler from '../effects-handlers/ApiCallEffectHandler';
 
@@ -36,9 +45,16 @@ export default class App extends Component {
   }
 
   render() {
+    const page = (
+      <PageBrowser dispatcher={this.state.dispatcher}
+      />
+    );
+
     return (
       <main>
-        Nothing here yet
+        <div id="pages">
+          {page}
+        </div>
       </main>
     );
   }
