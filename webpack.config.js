@@ -6,7 +6,7 @@ const babelSettings = {
 };
 
 module.exports = {
-  entry: './client/js/index.jsx',
+  entry: './app/index.jsx',
   output: { path: __dirname + '/build', filename: 'bundle.js' },
   module: {
     loaders: [
