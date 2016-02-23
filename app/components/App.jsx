@@ -47,6 +47,7 @@ export default class App extends Component {
         <div id="page-handler-outer">
           <PageHandler dispatcher={this.state.dispatcher}
             page={this.state.reduction.getIn(['appState', 'page'])}
+            artistList={this.state.reduction.getIn(['appState', 'browser', 'artists'])}
           />
         </div>
       </main>

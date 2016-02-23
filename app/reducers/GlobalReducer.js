@@ -4,17 +4,31 @@
  */
 
 import {
-  APP_PAGE_CHANGED
+  APP_PAGE_CHANGED,
+
+  BROWSER_LIST_ARTISTS_REQUESTED,
+  BROWSER_API_LIST_ARTISTS_RECEIVED
 } from '../constants/actions';
 
 import {
   changePage
 } from './AppReducer';
 
+import {
+  requestListArtists,
+  insertListArtists
+} from './PageBrowserReducer';
+
 export default (reduction, action) => {
   switch (action.type) {
     case APP_PAGE_CHANGED:
       return changePage(reduction, action.payload);
+
+    case BROWSER_LIST_ARTISTS_REQUESTED:
+      return requestListArtists(reduction);
+    case BROWSER_API_LIST_ARTISTS_RECEIVED:
+      return insertListArtists(reduction, action.payload);
+
     default:
       return reduction;
   }

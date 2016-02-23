@@ -6,17 +6,21 @@
 import buildEffectHandler from '../effectHandlerBuilder';
 
 import {
-  // API_CALL_DO_SOMETHING
+  API_LIST_ARTISTS
 } from '../constants/effects';
 
+import {
+  apiReceivedListArtists
+} from '../actions/PageBrowserActions';
+
+import axios from 'axios';
+
 export default buildEffectHandler({
-  /*
-  [API_CALL_DO_SOMETHING]: (query, dispatcher) => {
-    axios.get(API_DO_SOMETHING).then(
-      response => dispatcher.dispatch(gotSomething(response))
+  [API_LIST_ARTISTS]: (_, dispatcher) => {
+    axios.get('/api/list/artists').then(
+      response => dispatcher.dispatch(apiReceivedListArtists(response))
     ).catch(
-      () => dispatcher.dispatch(gotSomething(null))
+      () => dispatcher.dispatch(apiReceivedListArtists(null))
     );
   }
-  */
 });

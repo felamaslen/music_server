@@ -12,7 +12,9 @@ import {
 export default new Record({
   appState: fromJS({
     page: startingPage,
-    lastKeydownCode: null
+    browser: {
+      artists: []
+    }
   }),
   effects: List.of()
 });

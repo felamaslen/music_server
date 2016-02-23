@@ -4,8 +4,8 @@
  */
 
 import React, { PropTypes } from 'react';
-import {} from 'immutable';
-// import classNames from 'classnames';
+import { List } from 'immutable';
+import classNames from 'classnames';
 import PureControllerView from './PureControllerView';
 
 import {
@@ -45,6 +45,7 @@ export default class PageHandler extends PureControllerView {
       case 'browser':
         pageComponent = (
           <PageBrowser dispatcher={this.props.dispatcher}
+            artists={this.props.artistList}
           />
         );
 
@@ -76,6 +77,7 @@ export default class PageHandler extends PureControllerView {
 }
 
 PageHandler.propTypes = {
-  page: PropTypes.string
+  page: PropTypes.string,
+  artistList: PropTypes.instanceOf(List)
 };
 

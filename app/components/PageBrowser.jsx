@@ -5,27 +5,46 @@
  */
 
 import React, { PropTypes } from 'react';
-import {} from 'immutable';
+import { List } from 'immutable';
 import classNames from 'classnames';
 import PureControllerView from './PureControllerView';
 
 import {
+  listArtistsRequested
 } from '../actions/PageBrowserActions';
 
 export default class PageBrowser extends PureControllerView {
+  componentDidMount() {
+    this.dispatchAction(listArtistsRequested());
+  }
+
   render() {
     const topLevelClassNames = classNames({
       'page-browser': true
     });
 
+    const artistsList = this.props.artists.map((artist, index) => {
+      return (
+        <li key={index}>
+          <span className="browser-artist">{artist}</span>
+          <ul className="browser-artist-albums"></ul>
+        </li>
+      );
+    });
+
     return (
       <div className={topLevelClassNames}>
-        <span>Page 1 (browser)</span>
+        <div className="artists-list-outer">
+          <ul className="artists-list">
+            {artistsList}
+          </ul>
+        </div>
       </div>
     );
   }
 }
 
 PageBrowser.propTypes = {
+  artists: PropTypes.instanceOf(List)
 };
 

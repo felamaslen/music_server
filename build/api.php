@@ -84,7 +84,7 @@ function _list_songs_from_browser($_query) {
       $query_songs = db_query('
         SELECT {id}, {track}, {title}, {artist}, {album}, {date}, {genre}
         FROM {music}
-      ') or http_error(500, 'Database error');
+      ') or http_quit(500, 'Database error');
       
       $songs = array();
       _get_songs_from_query($query_songs, $songs);
@@ -96,7 +96,7 @@ function _list_songs_from_browser($_query) {
     $query_albums = db_query('
       SELECT DISTINCT {album}
       FROM {music}
-    ') or http_error(500, 'Database error');
+    ') or http_quit(500, 'Database error');
 
     $albums = array();
 
@@ -145,7 +145,7 @@ function _list_songs_from_browser($_query) {
     array_unshift($args_songs_query, $songs_query);
 
     $songs_query = call_user_func_array('db_query', $args_songs_query)
-      or http_error(500, 'Database error');
+      or http_quit(500, 'Database error');
 
     $songs = array();
     _get_songs_from_query($songs_query, $songs);
@@ -168,7 +168,7 @@ function _list_songs_from_browser($_query) {
       array_unshift($args_browser_query, $browser_query);
 
       $browser_query = call_user_func_array('db_query', $args_browser_query)
-        or http_error(500, 'Database error');
+        or http_quit(500, 'Database error');
 
       $browser_albums = array();
       while (NULL !== ($row = $browser_query->fetch_object())) {
@@ -322,7 +322,7 @@ else {
         SELECT DISTINCT {artist}
         FROM {music}
         ORDER BY {artist}
-        ') or http_error(500, 'Database error');
+        ') or http_quit(500, 'Database error');
 
       $artists = array();
       while (NULL !== ($row = $query->fetch_object())) {
@@ -334,12 +334,13 @@ else {
       break;
 
     default:
-      http_error(400);
+      http_quit(400, 'Invalid list argument');
     }
 
     break;
 
   default:
+    http_quit(400, 'Invalid argument');
   }
 }
 
