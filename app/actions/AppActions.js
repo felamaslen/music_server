@@ -6,7 +6,7 @@
 import buildMessage from '../MessageBuilder';
 
 import {
-  // APP_SOMETHING_DONE
+  APP_PAGE_CHANGED
 } from '../constants/actions';
 
-// export const somethingDone = data => buildMessage(APP_SOMETHING_DONE, data);
+export const pageChanged = pageIndex => buildMessage(APP_PAGE_CHANGED, pageIndex);

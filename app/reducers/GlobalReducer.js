@@ -4,20 +4,19 @@
  */
 
 import {
-  // APP_SOMETHING_DONE
+  APP_PAGE_CHANGED
 } from '../constants/actions';
 
 import {
-  // doSomething
+  changePage
 } from './AppReducer';
 
 export default (reduction, action) => {
   switch (action.type) {
-  /*
-  case APP_SOMETHING_DONE:
-    return doSomething(reduction, action.payload);
-  */
-  default:
-    return reduction;
+    case APP_PAGE_CHANGED:
+      return changePage(reduction, action.payload);
+    default:
+      return reduction;
   }
 }
+

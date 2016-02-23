@@ -4,17 +4,14 @@
  * and loading other components
  */
 
-import { } from 'immutable';
+import { List } from 'immutable';
 import React, { Component } from 'react';
 import { Dispatcher } from 'flux';
 
 import globalReducer from '../reducers/GlobalReducer';
 
-import {
-} from '../actions/AppActions';
-
 // load other components
-import PageBrowser from './PageBrowser.jsx';
+import PageHandler from './PageHandler.jsx';
 
 import apiCallEffectHandler from '../effects-handlers/ApiCallEffectHandler';
 
@@ -45,15 +42,12 @@ export default class App extends Component {
   }
 
   render() {
-    const page = (
-      <PageBrowser dispatcher={this.state.dispatcher}
-      />
-    );
-
     return (
       <main>
-        <div id="pages">
-          {page}
+        <div id="page-handler-outer">
+          <PageHandler dispatcher={this.state.dispatcher}
+            page={this.state.reduction.getIn(['appState', 'page'])}
+          />
         </div>
       </main>
     );

@@ -3,8 +3,16 @@
  * Top level reducers
  */
 
-/*
-export const doSomething = (reduction, data) => {
-  return reduction.setIn(['appState', 'something'], data);
-};
-*/
+import {
+  pageIndex
+} from '../config';
+
+export const changePage = (reduction, index) => {
+  const newPage = pageIndex[index];
+  const oldPage = reduction.getIn(['appState', 'page']);
+
+  return typeof newPage !== 'undefined' && newPage !== oldPage ? reduction.setIn(
+    ['appState', 'page'], newPage
+  ) : reduction;
+}
+
