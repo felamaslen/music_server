@@ -205,7 +205,8 @@ if (!isset($_GET['q'])) {
 }
 else {
   $_query = array_map(function($item) {
-    return urldecode(str_replace(',', URI_SEPARATOR, $item));
+    // return urldecode(str_replace(',', URI_SEPARATOR, $item)); // from a previous age
+    return urldecode($item);
   }, explode('/', isset($_GET['q']) ? $_GET['q'] : ''));
 
   switch ($_query[0]) {
@@ -339,14 +340,12 @@ else {
         http_quit(400, 'Must provide artist!');
       }
 
-      $artist = urldecode($_query[2]);
-
       $query = db_query('
         SELECT DISTINCT {album}
         FROM {music}
         WHERE {artist} = "%s"
         ORDER BY {album}
-      ', $artist);
+      ', $_query[2]);
 
       $albums = array();
       while (NULL !== ($row = $query->fetch_object())) {
