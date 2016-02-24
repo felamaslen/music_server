@@ -11,8 +11,13 @@ import {
 
 export default new Record({
   appState: fromJS({
-    page: startingPage,
+    app: {
+      page: startingPage,
+      numLines: 0
+    },
     browser: {
+      artistsListScroll: 0,
+      artistsListLastScrollDir: 1,
       artists: [],
       albums: {}, // map of artist -> albums (List)
       tracks: [],

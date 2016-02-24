@@ -10,6 +10,10 @@ import classNames from 'classnames';
 import PureControllerView from './PureControllerView';
 
 import {
+  lineHeight
+} from '../config';
+
+import {
   keyUpOrDown,
   keyMap
 } from '../common';
@@ -34,31 +38,41 @@ export default class PageBrowser extends PureControllerView {
     });
   }
 
+  componentDidUpdate() {
+    this.refs.artistsList.scrollTop = lineHeight * this.props.artistsListScroll;
+  }
+
   render() {
     const topLevelClassNames = classNames({
+      page: true,
       'page-browser': true
     });
 
     const artistsList = this.props.artists.map((artist, artistIndex) => {
-      const artistSelected = this.props.selectedArtist === artistIndex;
+      let albums = null;
 
       const artistAlbums = this.props.albums.get(artist);
 
-      const albums = typeof artistAlbums === 'undefined' || artistAlbums.get('hidden')
-      ? null :
-      artistAlbums.get('list').map((album, albumIndex) => {
-        const liClass = classNames({
-          'browser-album': true,
-          selected: artistSelected && this.props.selectedAlbum === albumIndex
+      if (typeof artistAlbums !== 'undefined' && !artistAlbums.get('hidden')) {
+        const artistSelected = this.props.selectedArtist === artistIndex;
+
+        let _albums = artistAlbums.get('list');
+
+        albums = _albums.map((album, albumIndex) => {
+          const liClass = classNames({
+            'browser-album': true,
+            selected: artistSelected && this.props.selectedAlbum === albumIndex
+          });
+
+          return (
+            <li key={albumIndex} className={liClass}>{album}</li>
+          );
         });
 
-        return (
-          <li key={albumIndex} className={liClass}>{album}</li>
-        );
-      });
+      }
 
       const liClass = classNames({
-        'browser-album': true,
+        'browser-artist': true,
         selected: this.props.selectedArtist === artistIndex
           && this.props.selectedAlbum < 0
       });
@@ -79,7 +93,7 @@ export default class PageBrowser extends PureControllerView {
 
     return (
       <div className={topLevelClassNames}>
-        <div className="artists-list-outer">
+        <div className="artists-list-outer" ref="artistsList">
           <ul className="artists-list">
             {artistsList}
           </ul>
@@ -113,10 +127,11 @@ export default class PageBrowser extends PureControllerView {
 }
 
 PageBrowser.propTypes = {
+  selectedArtist: PropTypes.number,
+  selectedAlbum: PropTypes.number,
+  artistsListScroll: PropTypes.number,
   artists: PropTypes.instanceOf(List),
   tracks: PropTypes.instanceOf(List),
-  albums: PropTypes.instanceOf(Map),
-  selectedArtist: PropTypes.number,
-  selectedAlbum: PropTypes.number
+  albums: PropTypes.instanceOf(Map)
 };
 

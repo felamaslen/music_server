@@ -5,6 +5,7 @@
 
 import {
   APP_PAGE_CHANGED,
+  APP_WINDOW_RESIZED,
 
   BROWSER_LIST_ARTISTS_REQUESTED,
   BROWSER_LIST_ALBUMS_REQUESTED,
@@ -12,7 +13,8 @@ import {
 } from '../constants/actions';
 
 import {
-  changePage
+  changePage,
+  handleWindowResize
 } from './AppReducer';
 
 import {
@@ -25,6 +27,8 @@ export default (reduction, action) => {
   switch (action.type) {
     case APP_PAGE_CHANGED:
       return changePage(reduction, action.payload);
+    case APP_WINDOW_RESIZED:
+      return handleWindowResize(reduction);
 
     case BROWSER_LIST_ARTISTS_REQUESTED:
       return requestAndInsertListArtists(reduction, action.payload);

@@ -2,6 +2,48 @@ body {
   font: 1em "Ubuntu Mono", Consolas, monospace;
   margin: 0;
   padding: 0;
+  line-height: 21px;
+  overflow: hidden;
+}
+
+/* pages */
+#page-outer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.page {
+  height: 100%;
+}
+
+/* browser page */
+.page-browser {
+}
+
+.artists-list,
+.browser-artist-albums {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.browser-artist-albums {
+  padding-left: 1.2em;
+}
+
+.artists-list-outer {
+  width: 300px;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.artists-list li {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .browser-artist.selected,

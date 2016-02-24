@@ -49,3 +49,69 @@ export const keyUpOrDown = keyCode => {
   return (j ? 1 : (k ? -1 : 0)) * (pgdown || pgup ? 5 : 1);
 }
 
+export const calculateScrollOffset = reduction => {
+  const artists = reduction.getIn(['appState', 'browser', 'artists']);
+  const albums  = reduction.getIn(['appState', 'browser', 'albums']);
+
+  const artistKey = reduction.getIn(['appState', 'browser', 'selectedArtist']);
+  const albumKey  = reduction.getIn(['appState', 'browser', 'selectedAlbum']);
+
+  const dir = reduction.getIn(
+    ['appState', 'browser', 'artistsListLastScrollDir']
+  );
+
+  const currentScrollLines = reduction.getIn(
+    ['appState', 'browser', 'artistsListScroll']
+  );
+
+  // number of lines that can fit in the current window size
+  const numLines = reduction.getIn(['appState', 'app', 'numLines']);
+
+  let newReduction = reduction;
+
+  let offsetTop = -1;
+
+  artists.slice(0, artistKey + 1).forEach((artist, key) => {
+    offsetTop++;
+
+    if (key < artistKey) {
+      const thisArtistAlbums = albums.get(artist);
+
+      offsetTop += (thisArtistAlbums && !thisArtistAlbums.get('hidden')
+                    ? thisArtistAlbums.get('list').size : 0);
+    }
+  });
+
+  offsetTop += albumKey + 1;
+
+  if (dir > 0) {
+    // was scrolling down
+    const numLinesAfter = numLines + currentScrollLines - offsetTop;
+
+    // console.debug('numLinesAfter', numLinesAfter, offsetTop)
+
+    if (numLinesAfter < 4) {
+      const newScroll = offsetTop - numLines + 4;
+
+      newReduction = newReduction.setIn(
+        ['appState', 'browser', 'artistsListScroll'],
+        newScroll
+      );
+    }
+  }
+  else {
+    // was scrolling up
+    const numLinesBefore = offsetTop - currentScrollLines;
+
+    if (numLinesBefore < 4) {
+      // scroll up
+      newReduction = newReduction.setIn(
+        ['appState', 'browser', 'artistsListScroll'],
+        Math.max(0, offsetTop - 4)
+      );
+    }
+  }
+
+  return newReduction;
+}
+

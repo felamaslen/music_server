@@ -46,7 +46,7 @@ export default class App extends Component {
       <main>
         <div id="page-handler-outer">
           <PageHandler dispatcher={this.state.dispatcher}
-            page={this.state.reduction.getIn(['appState', 'page'])}
+            page={this.state.reduction.getIn(['appState', 'app', 'page'])}
             browser={this.state.reduction.getIn(['appState', 'browser'])}
           />
         </div>

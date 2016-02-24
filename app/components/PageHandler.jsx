@@ -6,6 +6,7 @@
 import React, { PropTypes } from 'react';
 import { Map } from 'immutable';
 import classNames from 'classnames';
+import debounce from 'debounce';
 import PureControllerView from './PureControllerView';
 
 import {
@@ -22,7 +23,8 @@ import PageBrowser from './PageBrowser.jsx';
 import PageAllSongs from './PageAllSongs.jsx';
 
 import {
-  pageChanged
+  pageChanged,
+  windowResized
 } from '../actions/AppActions';
 
 export default class PageHandler extends PureControllerView {
@@ -34,6 +36,12 @@ export default class PageHandler extends PureControllerView {
         this._changePage(digit);
       }
     });
+
+    window.addEventListener('resize', debounce(() => {
+      this.dispatchAction(windowResized());
+    }, 200));
+
+    this.dispatchAction(windowResized());
   }
 
   render() {
@@ -45,6 +53,7 @@ export default class PageHandler extends PureControllerView {
       case 'browser':
         pageComponent = (
           <PageBrowser dispatcher={this.props.dispatcher}
+            artistsListScroll={this.props.browser.get('artistsListScroll')}
             artists={this.props.browser.get('artists')}
             albums={this.props.browser.get('albums')}
             tracks={this.props.browser.get('tracks')}

@@ -4,6 +4,7 @@
  */
 
 export const APP_PAGE_CHANGED = 'a_apc';
+export const APP_WINDOW_RESIZED = 'a_awr';
 
 export const BROWSER_LIST_ARTISTS_REQUESTED     = 'a_bla';
 export const BROWSER_LIST_ALBUMS_REQUESTED      = 'a_blb';

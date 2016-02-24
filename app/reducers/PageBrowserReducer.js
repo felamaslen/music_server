@@ -8,6 +8,10 @@ import { List, fromJS } from 'immutable';
 import buildMessage from '../MessageBuilder';
 
 import {
+  calculateScrollOffset
+} from '../common';
+
+import {
   API_LIST_ARTISTS,
   API_LIST_ALBUMS
 } from '../constants/effects';
@@ -91,6 +95,8 @@ export const requestAndInsertListAlbums = (reduction, param) => {
     ).setIn(['appState', 'browser', 'selectedAlbum'], -1);
   }
 
+  newReduction = calculateScrollOffset(newReduction);
+
   return newReduction;
 }
 
@@ -153,9 +159,14 @@ export const selectArtistListItem = (reduction, direction) => {
     steps++;
   }
 
-  return reduction
+  let newReduction = reduction
+    .setIn(['appState', 'browser', 'artistsListLastScrollDir'], dir)
     .setIn(['appState', 'browser', 'selectedArtist'], newSelectedArtist)
     .setIn(['appState', 'browser', 'selectedAlbum'], newSelectedAlbum)
   ;
+
+  newReduction = calculateScrollOffset(newReduction);
+
+  return newReduction;
 }
 
