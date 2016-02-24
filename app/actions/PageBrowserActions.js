@@ -19,5 +19,3 @@ export const listAlbumsRequested = param =>
 
 export const artistListItemSelected = direction =>
   buildMessage(BROWSER_ARTIST_LIST_ITEM_SELECTED, direction);
-
-

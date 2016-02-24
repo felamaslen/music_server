@@ -41,11 +41,42 @@ export const requestAndInsertListArtists = (reduction, param) => {
 export const requestAndInsertListAlbums = (reduction, param) => {
   let newReduction;
 
+  const toggleHidden = !!param.toggleHidden;
+
+  const artist = toggleHidden ? reduction.getIn(
+    ['appState', 'browser', 'artists', reduction.getIn(
+      ['appState', 'browser', 'selectedArtist']
+    )]
+  ) : param.artist;
+
   if (typeof param.response === 'undefined') {
     // request
-    const effects = reduction.get('effects').push(buildMessage(API_LIST_ALBUMS, param.artist));
+    const albums = reduction.getIn(['appState', 'browser', 'albums', artist]);
 
-    newReduction = reduction.set('effects', effects);
+    let effects = reduction.get('effects');
+    if (!albums) {
+      // make new AJAX request
+      effects = effects.push(buildMessage(API_LIST_ALBUMS, artist));
+
+      newReduction = reduction.set('effects', effects);
+    }
+    else {
+      const currentlyHidden = albums.get('hidden');
+
+      const shouldHide = param.toggleHidden ? !currentlyHidden : false;
+
+      newReduction = reduction.setIn(
+        ['appState', 'browser', 'albums', artist, 'hidden'], shouldHide
+      );
+
+      // if we're hiding the albums of the currently selected artist,
+      // then reset the selectedAlbum index
+      if (shouldHide) {
+        newReduction = newReduction.setIn(
+          ['appState', 'browser', 'selectedAlbum'], -1
+        );
+      }
+    }
   }
   else {
     // response
@@ -53,11 +84,20 @@ export const requestAndInsertListAlbums = (reduction, param) => {
       !param.response.data;
 
     newReduction = badResponse ? reduction : reduction.setIn(
-      ['appState', 'browser', 'albums', param.artist], fromJS(param.response.data)
+      ['appState', 'browser', 'albums', artist], fromJS({
+        hidden: false,
+        list: param.response.data
+      })
     ).setIn(['appState', 'browser', 'selectedAlbum'], -1);
   }
 
   return newReduction;
+}
+
+const getArtistAlbums = (albums, artist) => {
+  const artistAlbums = albums.get(artist);
+
+  return !!artistAlbums && !artistAlbums.get('hidden') ? artistAlbums.get('list') : List.of();
 }
 
 export const selectArtistListItem = (reduction, direction) => {
@@ -70,7 +110,8 @@ export const selectArtistListItem = (reduction, direction) => {
   let newSelectedArtist = selectedArtist;
   let newSelectedAlbum = selectedAlbum;
 
-  let _albums = albums.get(artists.get(selectedArtist)) || List.of();
+  let _albums = getArtistAlbums(albums, artists.get(selectedArtist));
+
   let steps = 0;
   const numSteps = Math.abs(direction);
   const dir = direction < 0 ? -1 : 1;
@@ -87,7 +128,7 @@ export const selectArtistListItem = (reduction, direction) => {
 
         newSelectedArtist--;
 
-        _albums = albums.get(artists.get(newSelectedArtist)) || List.of();
+        _albums = getArtistAlbums(albums, artists.get(newSelectedArtist));
 
         newSelectedAlbum = _albums.size - 1;
       }
@@ -103,7 +144,7 @@ export const selectArtistListItem = (reduction, direction) => {
 
         newSelectedArtist++;
 
-        _albums = albums.get(artists.get(newSelectedArtist)) || List.of();
+        _albums = getArtistAlbums(albums, artists.get(newSelectedArtist));
 
         newSelectedAlbum = -1;
       }

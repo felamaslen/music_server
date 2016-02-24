@@ -10,7 +10,8 @@ import classNames from 'classnames';
 import PureControllerView from './PureControllerView';
 
 import {
-  keyUpOrDown
+  keyUpOrDown,
+  keyMap
 } from '../common';
 
 import {
@@ -24,7 +25,12 @@ export default class PageBrowser extends PureControllerView {
     this.dispatchAction(listArtistsRequested({}));
 
     window.addEventListener('keydown', event => {
-      this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
+      if (event.keyCode === keyMap.space) {
+        this._toggleArtistAlbums(event);
+      }
+      else {
+        this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
+      }
     });
   }
 
@@ -34,12 +40,16 @@ export default class PageBrowser extends PureControllerView {
     });
 
     const artistsList = this.props.artists.map((artist, artistIndex) => {
+      const artistSelected = this.props.selectedArtist === artistIndex;
+
       const artistAlbums = this.props.albums.get(artist);
-      const albums = typeof artistAlbums === 'undefined' ? null :
-      artistAlbums.map((album, albumIndex) => {
+
+      const albums = typeof artistAlbums === 'undefined' || artistAlbums.get('hidden')
+      ? null :
+      artistAlbums.get('list').map((album, albumIndex) => {
         const liClass = classNames({
           'browser-album': true,
-          selected: this.props.selectedAlbum === albumIndex
+          selected: artistSelected && this.props.selectedAlbum === albumIndex
         });
 
         return (
@@ -90,6 +100,15 @@ export default class PageBrowser extends PureControllerView {
 
       this.dispatchAction(artistListItemSelected(direction));
     }
+  }
+
+  _toggleArtistAlbums(artist) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    this.dispatchAction(listAlbumsRequested({
+      toggleHidden: true
+    }));
   }
 }
 
