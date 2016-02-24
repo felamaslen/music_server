@@ -16,6 +16,7 @@ export default new Record({
       numLines: 0
     },
     browser: {
+      typeFocus: 'artistsList',
       artistsListScroll: 0,
       artistsListLastScrollDir: 1,
       artists: [],

@@ -53,6 +53,7 @@ export default class PageHandler extends PureControllerView {
       case 'browser':
         pageComponent = (
           <PageBrowser dispatcher={this.props.dispatcher}
+            typeFocus={this.props.browser.get('typeFocus')}
             artistsListScroll={this.props.browser.get('artistsListScroll')}
             artists={this.props.browser.get('artists')}
             albums={this.props.browser.get('albums')}

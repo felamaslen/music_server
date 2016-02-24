@@ -29,11 +29,15 @@ export default class PageBrowser extends PureControllerView {
     this.dispatchAction(listArtistsRequested({}));
 
     window.addEventListener('keydown', event => {
-      if (event.keyCode === keyMap.space) {
-        this._toggleArtistAlbums(event);
-      }
-      else {
-        this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
+      switch (this.props.typeFocus) {
+      case 'artistsList':
+        if (event.keyCode === keyMap.space) {
+          this._toggleArtistAlbums(event);
+        }
+        else {
+          this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
+        }
+      default:
       }
     });
   }
@@ -130,6 +134,7 @@ PageBrowser.propTypes = {
   selectedArtist: PropTypes.number,
   selectedAlbum: PropTypes.number,
   artistsListScroll: PropTypes.number,
+  typeFocus: PropTypes.string,
   artists: PropTypes.instanceOf(List),
   tracks: PropTypes.instanceOf(List),
   albums: PropTypes.instanceOf(Map)
