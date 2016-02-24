@@ -7,17 +7,17 @@ import buildMessage from '../MessageBuilder';
 
 import {
   BROWSER_LIST_ARTISTS_REQUESTED,
-  BROWSER_API_LIST_ARTISTS_RECEIVED,
-  BROWSER_LIST_ALBUMS_REQUESTED
+  BROWSER_LIST_ALBUMS_REQUESTED,
+  BROWSER_ARTIST_LIST_ITEM_SELECTED
 } from '../constants/actions';
 
-export const listArtistsRequested = () =>
-  buildMessage(BROWSER_LIST_ARTISTS_REQUESTED, {});
-
-export const apiReceivedListArtists = response =>
-  buildMessage(BROWSER_API_LIST_ARTISTS_RECEIVED, response);
+export const listArtistsRequested = param =>
+  buildMessage(BROWSER_LIST_ARTISTS_REQUESTED, param);
 
 export const listAlbumsRequested = param =>
   buildMessage(BROWSER_LIST_ALBUMS_REQUESTED, param);
+
+export const artistListItemSelected = direction =>
+  buildMessage(BROWSER_ARTIST_LIST_ITEM_SELECTED, direction);
 
 

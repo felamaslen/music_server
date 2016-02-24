@@ -19,6 +19,9 @@ export const keyMap = {
   right:  39,
   down:   40,
 
+  pgup:   33,
+  pgdown: 34,
+
   enter:  13,
   space:  32,
 
@@ -27,4 +30,22 @@ export const keyMap = {
   letter: character => letters.findIndex(item => item === character) + 65
 }
 
+export const keyUpOrDown = keyCode => {
+  const down = keyMap.down === keyCode;
+  const up   = keyMap.up   === keyCode;
+
+  const pgdown  = keyMap.pgdown === keyCode;
+  const pgup    = keyMap.pgup   === keyCode;
+
+  let j, k = false;
+  if (!down && !up) {
+    j = keyMap.letter('j') === keyCode;
+    k = keyMap.letter('k') === keyCode;
+  }
+
+  j = j || down || pgdown;
+  k = k || up   || pgup;
+
+  return (j ? 1 : (k ? -1 : 0)) * (pgdown || pgup ? 5 : 1);
+}
 

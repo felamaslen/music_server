@@ -15,7 +15,9 @@ export default new Record({
     browser: {
       artists: [],
       albums: {}, // map of artist -> albums (List)
-      tracks: []
+      tracks: [],
+      selectedArtist: -1,
+      selectedAlbum: -1
     }
   }),
   effects: List.of()

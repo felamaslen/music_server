@@ -11,7 +11,7 @@ import {
 } from '../constants/effects';
 
 import {
-  apiReceivedListArtists,
+  listArtistsRequested,
   listAlbumsRequested
 } from '../actions/PageBrowserActions';
 
@@ -20,9 +20,9 @@ import axios from 'axios';
 export default buildEffectHandler({
   [API_LIST_ARTISTS]: (_, dispatcher) => {
     axios.get('/api/list/artists').then(
-      response => dispatcher.dispatch(apiReceivedListArtists(response))
+      response => dispatcher.dispatch(listArtistsRequested({ response: response }))
     ).catch(
-      () => dispatcher.dispatch(apiReceivedListArtists(null))
+      () => dispatcher.dispatch(listArtistsRequested({ response: null }))
     );
   },
 

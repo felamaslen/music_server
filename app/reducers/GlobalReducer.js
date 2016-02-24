@@ -7,8 +7,8 @@ import {
   APP_PAGE_CHANGED,
 
   BROWSER_LIST_ARTISTS_REQUESTED,
-  BROWSER_API_LIST_ARTISTS_RECEIVED,
-  BROWSER_LIST_ALBUMS_REQUESTED
+  BROWSER_LIST_ALBUMS_REQUESTED,
+  BROWSER_ARTIST_LIST_ITEM_SELECTED
 } from '../constants/actions';
 
 import {
@@ -16,9 +16,9 @@ import {
 } from './AppReducer';
 
 import {
-  requestListArtists,
-  insertListArtists,
+  requestAndInsertListArtists,
   requestAndInsertListAlbums,
+  selectArtistListItem
 } from './PageBrowserReducer';
 
 export default (reduction, action) => {
@@ -27,11 +27,11 @@ export default (reduction, action) => {
       return changePage(reduction, action.payload);
 
     case BROWSER_LIST_ARTISTS_REQUESTED:
-      return requestListArtists(reduction);
-    case BROWSER_API_LIST_ARTISTS_RECEIVED:
-      return insertListArtists(reduction, action.payload);
+      return requestAndInsertListArtists(reduction, action.payload);
     case BROWSER_LIST_ALBUMS_REQUESTED:
       return requestAndInsertListAlbums(reduction, action.payload);
+    case BROWSER_ARTIST_LIST_ITEM_SELECTED:
+      return selectArtistListItem(reduction, action.payload);
 
     default:
       return reduction;

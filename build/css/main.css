@@ -3,3 +3,10 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.browser-artist.selected,
+.browser-album.selected {
+  font-weight: bold;
+  background-color: #06c;
+  color: #fff;
+}

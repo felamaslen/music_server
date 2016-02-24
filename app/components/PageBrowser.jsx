@@ -10,13 +10,22 @@ import classNames from 'classnames';
 import PureControllerView from './PureControllerView';
 
 import {
+  keyUpOrDown
+} from '../common';
+
+import {
   listArtistsRequested,
-  listAlbumsRequested
+  listAlbumsRequested,
+  artistListItemSelected
 } from '../actions/PageBrowserActions';
 
 export default class PageBrowser extends PureControllerView {
   componentDidMount() {
-    this.dispatchAction(listArtistsRequested());
+    this.dispatchAction(listArtistsRequested({}));
+
+    window.addEventListener('keydown', event => {
+      this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
+    });
   }
 
   render() {
@@ -24,26 +33,37 @@ export default class PageBrowser extends PureControllerView {
       'page-browser': true
     });
 
-    const artistsList = this.props.artists.map((artist, index) => {
+    const artistsList = this.props.artists.map((artist, artistIndex) => {
       const artistAlbums = this.props.albums.get(artist);
       const albums = typeof artistAlbums === 'undefined' ? null :
       artistAlbums.map((album, albumIndex) => {
+        const liClass = classNames({
+          'browser-album': true,
+          selected: this.props.selectedAlbum === albumIndex
+        });
+
         return (
-          <li key={albumIndex} className="browser-album">{album}</li>
+          <li key={albumIndex} className={liClass}>{album}</li>
         );
       });
 
+      const liClass = classNames({
+        'browser-album': true,
+        selected: this.props.selectedArtist === artistIndex
+          && this.props.selectedAlbum < 0
+      });
+
       return (
-        <li key={index}>
-          <span className="browser-artist">{artist}</span>
+        <li key={artistIndex}>
+          <span className={liClass}>{artist}</span>
           <ul className="browser-artist-albums">{albums}</ul>
         </li>
       );
     });
 
-    const trackList = this.props.tracks.map((track, index) => {
+    const trackList = this.props.tracks.map((track, trackIndex) => {
       return (
-        <li key={index} className="browser-track">{track}</li>
+        <li key={trackIndex} className="browser-track">{track}</li>
       );
     });
 
@@ -62,11 +82,22 @@ export default class PageBrowser extends PureControllerView {
       </div>
     );
   }
+
+  _selectArtistListItem(event, direction) {
+    if (direction !== 0) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      this.dispatchAction(artistListItemSelected(direction));
+    }
+  }
 }
 
 PageBrowser.propTypes = {
   artists: PropTypes.instanceOf(List),
   tracks: PropTypes.instanceOf(List),
-  albums: PropTypes.instanceOf(Map)
+  albums: PropTypes.instanceOf(Map),
+  selectedArtist: PropTypes.number,
+  selectedAlbum: PropTypes.number
 };
 
