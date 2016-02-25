@@ -61,11 +61,16 @@ body {
   display: block;
 }
 
-.browser-artist.selected,
-.browser-album.selected {
-  font-weight: bold;
+.selected,
+.selected {
+  background-color: #cecece;
+  color: #111;
+}
+.active .selected,
+.active .selected {
   background-color: #06c;
   color: #fff;
+  font-weight: bold;
 }
 
 .page-browser .browser-track {

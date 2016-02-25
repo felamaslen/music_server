@@ -23,7 +23,9 @@ import {
 import {
   listArtistsRequested,
   listAlbumsRequested,
-  artistListItemSelected
+  artistListItemSelected,
+  trackListItemSelected,
+  nextSectionSwitchedTo
 } from '../actions/PageBrowserActions';
 
 export default class PageBrowser extends PureControllerView {
@@ -31,15 +33,25 @@ export default class PageBrowser extends PureControllerView {
     this.dispatchAction(listArtistsRequested({}));
 
     window.addEventListener('keydown', event => {
-      switch (this.props.typeFocus) {
-      case 'artistsList':
-        if (event.keyCode === keyMap.space) {
-          this._toggleArtistAlbums(event);
+      if (event.keyCode === keyMap.tab) {
+        // switch active section
+        this._switchToNextSection(event);
+      }
+      else {
+        switch (this.props.typeFocus) {
+        case 'artistsList':
+          if (event.keyCode === keyMap.space) {
+            this._toggleArtistAlbums(event);
+          }
+          else {
+            this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
+          }
+          break;
+        case 'trackList':
+          this._selectTrackListItem(event, keyUpOrDown(event.keyCode));
+          break;
+        default:
         }
-        else {
-          this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
-        }
-      default:
       }
     });
   }
@@ -48,13 +60,8 @@ export default class PageBrowser extends PureControllerView {
     this.refs.artistsList.scrollTop = lineHeight * this.props.artistsListScroll;
   }
 
-  render() {
-    const topLevelClassNames = classNames({
-      page: true,
-      'page-browser': true
-    });
-
-    const artistsList = this.props.artists.map((artist, artistIndex) => {
+  _renderArtistList() {
+    return this.props.artists.map((artist, artistIndex) => {
       let albums = null;
 
       const artistAlbums = this.props.albums.get(artist);
@@ -90,10 +97,15 @@ export default class PageBrowser extends PureControllerView {
         </li>
       );
     });
+  }
 
-    const trackList = this.props.songs.map((track, trackIndex) => {
+  _renderTrackList() {
+    return this.props.songs.map((track, trackIndex) => {
       return (
-        <li key={trackIndex} className="browser-track">
+        <li key={trackIndex} className={classNames({
+          'browser-track': true,
+          selected: this.props.selectedSong === trackIndex
+        })}>
           <span className="track-tracknumber">{formatLeadingZeros(track.get(1))}.</span>
           <span className="track-title">{track.get(2)}</span>
           <span className="track-date">{track.get(7)}</span>
@@ -101,15 +113,32 @@ export default class PageBrowser extends PureControllerView {
         </li>
       );
     });
+  }
+
+  render() {
+    const topLevelClassNames = classNames({
+      page: true,
+      'page-browser': true
+    });
+
+    const artistsList = this._renderArtistList();
+
+    const trackList = this._renderTrackList();
 
     return (
       <div className={topLevelClassNames}>
-        <div className="artists-list-outer" ref="artistsList">
+        <div className={classNames({
+          'artists-list-outer': true,
+          active: this.props.typeFocus === 'artistsList'
+        })} ref="artistsList">
           <ul className="artists-list">
             {artistsList}
           </ul>
         </div>
-        <div className="track-list-outer">
+        <div className={classNames({
+          'track-list-outer': true,
+          active: this.props.typeFocus === 'trackList'
+        })}>
           <ul className="track-list">
             {trackList}
           </ul>
@@ -127,6 +156,15 @@ export default class PageBrowser extends PureControllerView {
     }
   }
 
+  _selectTrackListItem(event, direction) {
+    if (direction !== 0) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      this.dispatchAction(trackListItemSelected(direction));
+    }
+  }
+
   _toggleArtistAlbums(artist) {
     event.stopPropagation();
     event.preventDefault();
@@ -135,11 +173,18 @@ export default class PageBrowser extends PureControllerView {
       toggleHidden: true
     }));
   }
+
+  _switchToNextSection(event) {
+    // switches focus to the next section (e.g. artist list -> track list)
+    this.dispatchAction(nextSectionSwitchedTo());
+    event.preventDefault();
+  }
 }
 
 PageBrowser.propTypes = {
   selectedArtist: PropTypes.number,
   selectedAlbum: PropTypes.number,
+  selectedSong: PropTypes.number,
   artistsListScroll: PropTypes.number,
   typeFocus: PropTypes.string,
   artists: PropTypes.instanceOf(List),

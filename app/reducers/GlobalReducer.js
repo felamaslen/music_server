@@ -10,7 +10,9 @@ import {
   BROWSER_LIST_ARTISTS_REQUESTED,
   BROWSER_LIST_ALBUMS_REQUESTED,
   BROWSER_ARTIST_LIST_ITEM_SELECTED,
-  BROWSER_SONGS_LIST_RECEIVED
+  BROWSER_TRACK_LIST_ITEM_SELECTED,
+  BROWSER_SONGS_LIST_RECEIVED,
+  BROWSER_NEXT_SECTION_SWITCHED_TO
 } from '../constants/actions';
 
 import {
@@ -22,7 +24,9 @@ import {
   insertListSongs,
   requestAndInsertListArtists,
   requestAndInsertListAlbums,
-  selectArtistListItem
+  selectArtistListItem,
+  selectTrackListItem,
+  switchToNextSection
 } from './PageBrowserReducer';
 
 export default (reduction, action) => {
@@ -38,8 +42,12 @@ export default (reduction, action) => {
       return requestAndInsertListAlbums(reduction, action.payload);
     case BROWSER_ARTIST_LIST_ITEM_SELECTED:
       return selectArtistListItem(reduction, action.payload);
+    case BROWSER_TRACK_LIST_ITEM_SELECTED:
+      return selectTrackListItem(reduction, action.payload);
     case BROWSER_SONGS_LIST_RECEIVED:
       return insertListSongs(reduction, action.payload);
+    case BROWSER_NEXT_SECTION_SWITCHED_TO:
+      return switchToNextSection(reduction);
 
     default:
       return reduction;

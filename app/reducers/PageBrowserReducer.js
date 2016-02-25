@@ -23,13 +23,17 @@ export const insertListSongs = (reduction, response) => {
   const clearList = response === null;
 
   if (clearList) {
-    newReduction = newReduction.setIn(['appState', 'browser', 'songs'], List.of());
+    newReduction = newReduction
+      .setIn(['appState', 'browser', 'songs'], List.of())
+      .setIn(['appState', 'browser', 'selectedSong'], -1);
   }
   else {
     const badResponse = !response || !response.data || response.status !== 200;
 
     if (!badResponse) {
-      newReduction = newReduction.setIn(['appState', 'browser', 'songs'], fromJS(response.data));
+      newReduction = newReduction
+        .setIn(['appState', 'browser', 'songs'], fromJS(response.data))
+        .setIn(['appState', 'browser', 'selectedSong'], 0);
     }
     else {
       console.error('[ERROR] API error fetching songs');
@@ -106,6 +110,8 @@ export const requestAndInsertListAlbums = (reduction, param) => {
       if (shouldHide) {
         newReduction = newReduction.setIn(
           ['appState', 'browser', 'selectedAlbum'], -1
+        ).setIn(
+          ['appState', 'browser', 'songs'], List.of()
         );
       }
     }
@@ -214,6 +220,55 @@ export const selectArtistListItem = (reduction, direction) => {
   }
 
   newReduction = calculateScrollOffset(newReduction);
+
+  return newReduction;
+}
+
+export const selectTrackListItem = (reduction, direction) => {
+  let newReduction = reduction;
+
+  const currentSelectedSong = reduction.getIn(['appState', 'browser', 'selectedSong']);
+  const numSongs = reduction.getIn(['appState', 'browser', 'songs']).size;
+
+  const newSelectedSong = Math.min(
+    numSongs - 1,
+    Math.max(0, currentSelectedSong + direction)
+  );
+
+  newReduction = newReduction.setIn(['appState', 'browser', 'selectedSong'], newSelectedSong);
+
+  return newReduction;
+}
+
+export const switchToNextSection = reduction => {
+  let newReduction = reduction;
+
+  const sections = List.of(
+    'artistsList',
+    'trackList'
+  );
+
+  const currentSection = reduction.getIn(['appState', 'browser', 'typeFocus']);
+  const currentSectionIndex = sections.findIndex(item => item === currentSection);
+
+  if (currentSectionIndex > -1) {
+    const newSection = sections.get((currentSectionIndex + 1) % sections.size);
+
+    let shouldSwitch;
+
+    switch (newSection) {
+      case 'trackList':
+        // only switch to track list if there are tracks displayed
+        shouldSwitch = reduction.getIn(['appState', 'browser', 'songs']).size > 0;
+        break;
+      default:
+        shouldSwitch = true;
+    }
+
+    if (shouldSwitch) {
+      newReduction = newReduction.setIn(['appState', 'browser', 'typeFocus'], newSection);
+    }
+  }
 
   return newReduction;
 }

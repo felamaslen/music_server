@@ -5,6 +5,20 @@
 
 import { List } from 'immutable';
 
+export const urlEncode = _str => {
+  let str = _str;
+
+  str = (str + '').toString();
+
+  return encodeURIComponent(str)
+    .replace(/!/g, '%21')
+    .replace(/'/g, '%27')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/\*/g, '%2A')
+    .replace(/%20/g, '+');
+}
+
 export const letters = List.of(
   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
   'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
@@ -18,6 +32,8 @@ export const keyMap = {
   up:     38,
   right:  39,
   down:   40,
+
+  tab:    9,
 
   pgup:   33,
   pgdown: 34,

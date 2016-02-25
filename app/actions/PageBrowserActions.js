@@ -9,7 +9,9 @@ import {
   BROWSER_LIST_ARTISTS_REQUESTED,
   BROWSER_LIST_ALBUMS_REQUESTED,
   BROWSER_ARTIST_LIST_ITEM_SELECTED,
-  BROWSER_SONGS_LIST_RECEIVED
+  BROWSER_TRACK_LIST_ITEM_SELECTED,
+  BROWSER_SONGS_LIST_RECEIVED,
+  BROWSER_NEXT_SECTION_SWITCHED_TO
 } from '../constants/actions';
 
 export const listArtistsRequested = param =>
@@ -21,5 +23,11 @@ export const listAlbumsRequested = param =>
 export const artistListItemSelected = direction =>
   buildMessage(BROWSER_ARTIST_LIST_ITEM_SELECTED, direction);
 
+export const trackListItemSelected = direction =>
+  buildMessage(BROWSER_TRACK_LIST_ITEM_SELECTED, direction);
+
 export const listSongsReceived = response =>
   buildMessage(BROWSER_SONGS_LIST_RECEIVED, response);
+
+export const nextSectionSwitchedTo = () =>
+  buildMessage(BROWSER_NEXT_SECTION_SWITCHED_TO, {});

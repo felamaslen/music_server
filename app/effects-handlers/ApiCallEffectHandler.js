@@ -6,6 +6,10 @@
 import buildEffectHandler from '../effectHandlerBuilder';
 
 import {
+  urlEncode
+} from '../common';
+
+import {
   API_LIST_ARTISTS,
   API_LIST_ALBUMS,
   API_BROWSER_LIST_TRACKS
@@ -29,7 +33,9 @@ export default buildEffectHandler({
   },
 
   [API_LIST_ALBUMS]: (artist, dispatcher) => {
-    axios.get('/api/list/artist_albums/' + artist).then(
+    axios.get('/api/list/artist_albums/'
+              + urlEncode(artist)
+    ).then(
       response => dispatcher.dispatch(listAlbumsRequested({
         artist: artist,
         response: response
@@ -43,7 +49,10 @@ export default buildEffectHandler({
   },
 
   [API_BROWSER_LIST_TRACKS]: (params, dispatcher) => {
-    axios.get('/api/list/songs/' + params.artist + '/' + params.album).then(
+    axios.get('/api/list/songs/artists/'
+              + urlEncode(params.artist) + '/'
+              + urlEncode(params.album)
+    ).then(
       response => dispatcher.dispatch(listSongsReceived(response))
     ).catch(
       () => dispatcher.dispatch(listSongsReceived(null))

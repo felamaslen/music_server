@@ -3,5 +3,5 @@
   RewriteBase /
 
   RewriteRule ^api$ api.php [L,QSA]
-  RewriteRule ^api\/(.*)$ api.php?q=$1 [L,QSA]
+  RewriteRule ^api\/(.*)$ api.php?q=$1 [L,B,QSA]
 </IfModule>

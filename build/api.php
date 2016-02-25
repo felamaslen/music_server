@@ -145,6 +145,8 @@ function _list_songs_from_browser($_query) {
 
     array_unshift($args_songs_query, $songs_query);
 
+    // print_r($args_songs_query);
+
     $songs_query = call_user_func_array('db_query', $args_songs_query)
       or http_quit(500, 'Database error');
 

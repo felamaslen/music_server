@@ -23,7 +23,8 @@ export default new Record({
       albums: {}, // map of artist -> albums (List)
       songs: [],  // list of songs currently visible
       selectedArtist: -1,
-      selectedAlbum: -1
+      selectedAlbum: -1,
+      selectedSong: -1
     }
   }),
   effects: List.of()
