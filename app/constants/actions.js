@@ -9,4 +9,5 @@ export const APP_WINDOW_RESIZED = 'a_awr';
 export const BROWSER_LIST_ARTISTS_REQUESTED     = 'a_bla';
 export const BROWSER_LIST_ALBUMS_REQUESTED      = 'a_blb';
 export const BROWSER_ARTIST_LIST_ITEM_SELECTED  = 'a_bals';
+export const BROWSER_SONGS_LIST_RECEIVED        = 'a_bslr';
 

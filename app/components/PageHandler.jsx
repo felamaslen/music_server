@@ -57,7 +57,7 @@ export default class PageHandler extends PureControllerView {
             artistsListScroll={this.props.browser.get('artistsListScroll')}
             artists={this.props.browser.get('artists')}
             albums={this.props.browser.get('albums')}
-            tracks={this.props.browser.get('tracks')}
+            songs={this.props.browser.get('songs')}
             selectedArtist={this.props.browser.get('selectedArtist')}
             selectedAlbum={this.props.browser.get('selectedAlbum')}
           />

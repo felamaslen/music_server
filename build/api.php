@@ -40,9 +40,10 @@ function _search_suggestions_query($compare, $fields, $term) {
 function _get_songs_from_query($query, &$songs) {
   while (NULL !== ($row = $query->fetch_object())) {
     array_push($songs, array(
-      $row->id,
+      (int)$row->id,
       $row->track,
       $row->title,
+      (int)$row->time,
       $row->artist,
       $row->album,
       $row->genre,
@@ -73,6 +74,8 @@ function _list_songs_from_browser($_query) {
   $have_artists = !is_null($req_artists);
   $have_albums  = !is_null($req_albums);
 
+  $fields = '{id}, {track}, {title}, {time}, {artist}, {album}, {genre}, {date}';
+
   $all_songs = !$have_artists && !$have_albums;
 
   if ($all_songs) {
@@ -82,7 +85,7 @@ function _list_songs_from_browser($_query) {
     // One idea would be pagination, but that has other drawbacks
     if (GET_ALL_SONGS) {
       $query_songs = db_query('
-        SELECT {id}, {track}, {title}, {artist}, {album}, {date}, {genre}
+        SELECT ' . $fields . '
         FROM {music}
       ') or http_quit(500, 'Database error');
       
@@ -113,8 +116,6 @@ function _list_songs_from_browser($_query) {
   else {
     $artists  = $have_artists ? explode(URI_SEPARATOR, $req_artists) : array();
     $albums   = $have_albums  ? explode(URI_SEPARATOR, $req_albums)  : array();
-
-    $fields = '{id}, {track}, {title}, {artist}, {album}, {genre}, {date}';
 
     $args_songs_query = array();
 

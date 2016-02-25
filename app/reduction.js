@@ -21,7 +21,7 @@ export default new Record({
       artistsListLastScrollDir: 1,
       artists: [],
       albums: {}, // map of artist -> albums (List)
-      tracks: [],
+      songs: [],  // list of songs currently visible
       selectedArtist: -1,
       selectedAlbum: -1
     }

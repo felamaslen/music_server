@@ -13,11 +13,34 @@ import {
 
 import {
   API_LIST_ARTISTS,
-  API_LIST_ALBUMS
+  API_LIST_ALBUMS,
+  API_BROWSER_LIST_TRACKS
 } from '../constants/effects';
 
+export const insertListSongs = (reduction, response) => {
+  let newReduction = reduction;
+
+  const clearList = response === null;
+
+  if (clearList) {
+    newReduction = newReduction.setIn(['appState', 'browser', 'songs'], List.of());
+  }
+  else {
+    const badResponse = !response || !response.data || response.status !== 200;
+
+    if (!badResponse) {
+      newReduction = newReduction.setIn(['appState', 'browser', 'songs'], fromJS(response.data));
+    }
+    else {
+      console.error('[ERROR] API error fetching songs');
+    }
+  }
+
+  return newReduction;
+};
+
 export const requestAndInsertListArtists = (reduction, param) => {
-  let newReduction;
+  let newReduction = reduction;
 
   const oldArtists = reduction.getIn(['appState', 'browser', 'artists']);
 
@@ -32,18 +55,23 @@ export const requestAndInsertListArtists = (reduction, param) => {
     const badResponse = !param.response || param.response.status !== 200 ||
       !param.response.data;
 
-    newReduction = badResponse ? reduction : reduction.setIn(
-      ['appState', 'browser', 'artists'], fromJS(param.response.data)
-    )
-    .setIn(['appState', 'browser', 'selectedArtist'], param.response.data.length > 0 ? 0 : -1)
-    .setIn(['appState', 'browser', 'selectedAlbum'], -1);
+    if (!badResponse) {
+      newReduction = newReduction.setIn(
+        ['appState', 'browser', 'artists'], fromJS(param.response.data)
+      )
+      .setIn(['appState', 'browser', 'selectedArtist'], param.response.data.length > 0 ? 0 : -1)
+      .setIn(['appState', 'browser', 'selectedAlbum'], -1);
+    }
+    else {
+      console.error('[ERROR] API error fetching artists');
+    }
   }
 
   return newReduction;
 }
 
 export const requestAndInsertListAlbums = (reduction, param) => {
-  let newReduction;
+  let newReduction = reduction;
 
   const toggleHidden = !!param.toggleHidden;
 
@@ -62,14 +90,14 @@ export const requestAndInsertListAlbums = (reduction, param) => {
       // make new AJAX request
       effects = effects.push(buildMessage(API_LIST_ALBUMS, artist));
 
-      newReduction = reduction.set('effects', effects);
+      newReduction = newReduction.set('effects', effects);
     }
     else {
       const currentlyHidden = albums.get('hidden');
 
       const shouldHide = param.toggleHidden ? !currentlyHidden : false;
 
-      newReduction = reduction.setIn(
+      newReduction = newReduction.setIn(
         ['appState', 'browser', 'albums', artist, 'hidden'], shouldHide
       );
 
@@ -87,12 +115,14 @@ export const requestAndInsertListAlbums = (reduction, param) => {
     const badResponse = !param.response || param.response.status !== 200 ||
       !param.response.data;
 
-    newReduction = badResponse ? reduction : reduction.setIn(
-      ['appState', 'browser', 'albums', artist], fromJS({
-        hidden: false,
-        list: param.response.data
-      })
-    ).setIn(['appState', 'browser', 'selectedAlbum'], -1);
+    if (!badResponse) {
+      newReduction = newReduction.setIn(
+        ['appState', 'browser', 'albums', artist], fromJS({
+          hidden: false,
+          list: param.response.data
+        })
+      ).setIn(['appState', 'browser', 'selectedAlbum'], -1);
+    }
   }
 
   newReduction = calculateScrollOffset(newReduction);
@@ -164,6 +194,24 @@ export const selectArtistListItem = (reduction, direction) => {
     .setIn(['appState', 'browser', 'selectedArtist'], newSelectedArtist)
     .setIn(['appState', 'browser', 'selectedAlbum'], newSelectedAlbum)
   ;
+
+  if (newSelectedAlbum > -1) {
+    const artist  = artists.get(newSelectedArtist);
+    const album   = albums.getIn([artist, 'list', newSelectedAlbum]);
+
+    newReduction = newReduction.set('effects', newReduction.get('effects').push(
+      buildMessage(
+        API_BROWSER_LIST_TRACKS, {
+          artist,
+          album
+        }
+      )
+    ));
+  }
+  else {
+    // clear the list of songs
+    newReduction = newReduction.setIn(['appState', 'browser', 'songs'], List.of());
+  }
 
   newReduction = calculateScrollOffset(newReduction);
 

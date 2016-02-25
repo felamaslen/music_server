@@ -115,3 +115,24 @@ export const calculateScrollOffset = reduction => {
   return newReduction;
 }
 
+export const formatLeadingZeros = number =>
+  number < 10 ? (number === 0 ? '00' : '0' + number.toString())
+    : number.toString();
+
+export const formatTimeSeconds = _seconds => {
+  let components = [];
+
+  const hours = Math.floor(_seconds / 3600);
+  if (hours > 0) {
+    components.push(hours);
+  }
+
+  const minutes = formatLeadingZeros(Math.floor((_seconds % 3600) / 60));
+  const seconds = formatLeadingZeros(_seconds % 60);
+
+  components.push(minutes);
+  components.push(seconds);
+
+  return components.join(':');
+}
+

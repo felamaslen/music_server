@@ -26,7 +26,8 @@ body {
 }
 
 .artists-list,
-.browser-artist-albums {
+.browser-artist-albums,
+.page-browser .track-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -35,11 +36,19 @@ body {
   padding-left: 1.2em;
 }
 
-.artists-list-outer {
+.page-browser .artists-list-outer {
   width: 300px;
   height: 100%;
   overflow: hidden;
   border-right: 2px solid #06c;
+}
+.page-browser .track-list-outer {
+  position: absolute;
+  right: 0;
+  left: 300px;
+  top: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 .artists-list li {
@@ -57,4 +66,30 @@ body {
   font-weight: bold;
   background-color: #06c;
   color: #fff;
+}
+
+.page-browser .browser-track {
+  display: block;
+  height: 21px;
+}
+.page-browser .browser-track > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+  white-space: nowrap;
+}
+.page-browser .track-tracknumber {
+  width: 3em;
+  text-align: right;
+}
+.page-browser .track-title {
+  padding-left: 1em;
+  width: 25em;
+}
+.page-browser .track-date {
+  width: 5em;
+}
+.page-browser .track-time {
+  padding-left: 1em;
+  width: 3em;
 }

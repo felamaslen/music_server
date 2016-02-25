@@ -15,7 +15,9 @@ import {
 
 import {
   keyUpOrDown,
-  keyMap
+  keyMap,
+  formatLeadingZeros,
+  formatTimeSeconds
 } from '../common';
 
 import {
@@ -89,9 +91,14 @@ export default class PageBrowser extends PureControllerView {
       );
     });
 
-    const trackList = this.props.tracks.map((track, trackIndex) => {
+    const trackList = this.props.songs.map((track, trackIndex) => {
       return (
-        <li key={trackIndex} className="browser-track">{track}</li>
+        <li key={trackIndex} className="browser-track">
+          <span className="track-tracknumber">{formatLeadingZeros(track.get(1))}.</span>
+          <span className="track-title">{track.get(2)}</span>
+          <span className="track-date">{track.get(7)}</span>
+          <span className="track-time">{formatTimeSeconds(track.get(3))}</span>
+        </li>
       );
     });
 
@@ -136,7 +143,7 @@ PageBrowser.propTypes = {
   artistsListScroll: PropTypes.number,
   typeFocus: PropTypes.string,
   artists: PropTypes.instanceOf(List),
-  tracks: PropTypes.instanceOf(List),
+  songs: PropTypes.instanceOf(List),
   albums: PropTypes.instanceOf(Map)
 };
 

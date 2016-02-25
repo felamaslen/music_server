@@ -7,12 +7,14 @@ import buildEffectHandler from '../effectHandlerBuilder';
 
 import {
   API_LIST_ARTISTS,
-  API_LIST_ALBUMS
+  API_LIST_ALBUMS,
+  API_BROWSER_LIST_TRACKS
 } from '../constants/effects';
 
 import {
   listArtistsRequested,
-  listAlbumsRequested
+  listAlbumsRequested,
+  listSongsReceived
 } from '../actions/PageBrowserActions';
 
 import axios from 'axios';
@@ -37,6 +39,14 @@ export default buildEffectHandler({
         artist: artist,
         response: null
       }))
+    );
+  },
+
+  [API_BROWSER_LIST_TRACKS]: (params, dispatcher) => {
+    axios.get('/api/list/songs/' + params.artist + '/' + params.album).then(
+      response => dispatcher.dispatch(listSongsReceived(response))
+    ).catch(
+      () => dispatcher.dispatch(listSongsReceived(null))
     );
   }
 });
