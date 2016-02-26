@@ -9,9 +9,35 @@ import classNames from 'classnames';
 import PureControllerView from './PureControllerView';
 
 import {
+  keyMap
+} from '../common';
+
+import {
+  playPauseRequested
 } from '../actions/PlayerActions';
 
 export default class Player extends PureControllerView {
+  componentWillMount() {
+    window.addEventListener('keydown', event => {
+      let preventDefault = true;
+
+      switch (event.keyCode) {
+      case keyMap.letter('c'):
+        // toggle play/pause
+        this._playPause();
+
+        break;
+      default:
+        preventDefault = false;
+      }
+
+      if (preventDefault) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
+  }
+
   componentWillUpdate(nextProps) {
     const isPlaying = !this.refs.audioElem.paused;
 
@@ -36,6 +62,10 @@ export default class Player extends PureControllerView {
     }
   }
 
+  _playPause() {
+    this.dispatchAction(playPauseRequested());
+  }
+
   render() {
     const topLevelClassNames = classNames({
       'player-engine': true
@@ -50,8 +80,8 @@ export default class Player extends PureControllerView {
 }
 
 Player.propTypes = {
+  info:     PropTypes.instanceOf(Map),
   playing:  PropTypes.bool,
-  source:  PropTypes.string,
-  info:     PropTypes.instanceOf(Map)
+  source:   PropTypes.string
 };
 

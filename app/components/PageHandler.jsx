@@ -4,6 +4,7 @@
  */
 
 import React, { PropTypes } from 'react';
+import { Dispatcher } from 'flux';
 import { Map } from 'immutable';
 import classNames from 'classnames';
 import debounce from 'debounce';
@@ -44,6 +45,10 @@ export default class PageHandler extends PureControllerView {
 
     this.dispatchAction(windowResized());
   }
+
+  _changePage(index) {
+    this.dispatchAction(pageChanged(index));
+  };
 
   render() {
     const page = this.props.page;
@@ -94,16 +99,12 @@ export default class PageHandler extends PureControllerView {
       </div>
     );
   }
-
-  _changePage(index) {
-    this.dispatchAction(pageChanged(index));
-  };
-
 }
 
 PageHandler.propTypes = {
-  page: PropTypes.string,
-  player:   PropTypes.instanceOf(Map),
-  browser:  PropTypes.instanceOf(Map)
+  browser:    PropTypes.instanceOf(Map),
+  dispatcher: PropTypes.instanceOf(Dispatcher),
+  page:       PropTypes.string,
+  player:     PropTypes.instanceOf(Map)
 };
 

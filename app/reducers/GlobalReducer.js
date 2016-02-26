@@ -7,6 +7,8 @@ import {
   APP_PAGE_CHANGED,
   APP_WINDOW_RESIZED,
 
+  PLAYER_PLAYPAUSE_REQUESTED,
+
   BROWSER_LIST_ARTISTS_REQUESTED,
   BROWSER_LIST_ALBUMS_REQUESTED,
   BROWSER_ARTIST_LIST_ITEM_SELECTED,
@@ -20,6 +22,10 @@ import {
   changePage,
   handleWindowResize
 } from './AppReducer';
+
+import {
+  playPause
+} from './PlayerReducer';
 
 import {
   insertListSongs,
@@ -37,6 +43,9 @@ export default (reduction, action) => {
       return changePage(reduction, action.payload);
     case APP_WINDOW_RESIZED:
       return handleWindowResize(reduction);
+
+    case PLAYER_PLAYPAUSE_REQUESTED:
+      return playPause(reduction);
 
     case BROWSER_LIST_ARTISTS_REQUESTED:
       return requestAndInsertListArtists(reduction, action.payload);

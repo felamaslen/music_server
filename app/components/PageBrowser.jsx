@@ -136,6 +136,33 @@ export default class PageBrowser extends PureControllerView {
     });
   }
 
+  _selectArtistListItem(direction) {
+    if (direction !== 0) {
+      this.dispatchAction(artistListItemSelected(direction));
+    }
+  }
+
+  _selectTrackListItem(direction) {
+    if (direction !== 0) {
+      this.dispatchAction(trackListItemSelected(direction));
+    }
+  }
+
+  _toggleArtistAlbums(artist) {
+    this.dispatchAction(listAlbumsRequested({
+      toggleHidden: true
+    }));
+  }
+
+  _switchToNextSection() {
+    // switches focus to the next section (e.g. artist list -> track list)
+    this.dispatchAction(nextSectionSwitchedTo());
+  }
+
+  _playCurrentTrackListItem() {
+    this.dispatchAction(currentTrackListItemPlayed());
+  }
+
   render() {
     const topLevelClassNames = classNames({
       page: true,
@@ -167,43 +194,16 @@ export default class PageBrowser extends PureControllerView {
       </div>
     );
   }
-
-  _selectArtistListItem(direction) {
-    if (direction !== 0) {
-      this.dispatchAction(artistListItemSelected(direction));
-    }
-  }
-
-  _selectTrackListItem(direction) {
-    if (direction !== 0) {
-      this.dispatchAction(trackListItemSelected(direction));
-    }
-  }
-
-  _toggleArtistAlbums(artist) {
-    this.dispatchAction(listAlbumsRequested({
-      toggleHidden: true
-    }));
-  }
-
-  _switchToNextSection() {
-    // switches focus to the next section (e.g. artist list -> track list)
-    this.dispatchAction(nextSectionSwitchedTo());
-  }
-
-  _playCurrentTrackListItem() {
-    this.dispatchAction(currentTrackListItemPlayed());
-  }
 }
 
 PageBrowser.propTypes = {
-  selectedArtist: PropTypes.number,
-  selectedAlbum: PropTypes.number,
-  selectedSong: PropTypes.number,
-  artistsListScroll: PropTypes.number,
-  typeFocus: PropTypes.string,
+  albums: PropTypes.instanceOf(Map),
   artists: PropTypes.instanceOf(List),
+  artistsListScroll: PropTypes.number,
+  selectedAlbum: PropTypes.number,
+  selectedArtist: PropTypes.number,
+  selectedSong: PropTypes.number,
   songs: PropTypes.instanceOf(List),
-  albums: PropTypes.instanceOf(Map)
+  typeFocus: PropTypes.string
 };
 
