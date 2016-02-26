@@ -41,7 +41,7 @@ function _get_songs_from_query($query, &$songs) {
   while (NULL !== ($row = $query->fetch_object())) {
     array_push($songs, array(
       (int)$row->id,
-      $row->track,
+      (int)$row->track,
       $row->title,
       (int)$row->time,
       $row->artist,

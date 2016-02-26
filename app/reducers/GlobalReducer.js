@@ -11,6 +11,7 @@ import {
   BROWSER_LIST_ALBUMS_REQUESTED,
   BROWSER_ARTIST_LIST_ITEM_SELECTED,
   BROWSER_TRACK_LIST_ITEM_SELECTED,
+  BROWSER_TRACK_LIST_ITEM_PLAYED,
   BROWSER_SONGS_LIST_RECEIVED,
   BROWSER_NEXT_SECTION_SWITCHED_TO
 } from '../constants/actions';
@@ -26,7 +27,8 @@ import {
   requestAndInsertListAlbums,
   selectArtistListItem,
   selectTrackListItem,
-  switchToNextSection
+  switchToNextSection,
+  playCurrentTrackListItem
 } from './PageBrowserReducer';
 
 export default (reduction, action) => {
@@ -44,6 +46,8 @@ export default (reduction, action) => {
       return selectArtistListItem(reduction, action.payload);
     case BROWSER_TRACK_LIST_ITEM_SELECTED:
       return selectTrackListItem(reduction, action.payload);
+    case BROWSER_TRACK_LIST_ITEM_PLAYED:
+      return playCurrentTrackListItem(reduction);
     case BROWSER_SONGS_LIST_RECEIVED:
       return insertListSongs(reduction, action.payload);
     case BROWSER_NEXT_SECTION_SWITCHED_TO:

@@ -10,6 +10,7 @@ import {
   BROWSER_LIST_ALBUMS_REQUESTED,
   BROWSER_ARTIST_LIST_ITEM_SELECTED,
   BROWSER_TRACK_LIST_ITEM_SELECTED,
+  BROWSER_TRACK_LIST_ITEM_PLAYED,
   BROWSER_SONGS_LIST_RECEIVED,
   BROWSER_NEXT_SECTION_SWITCHED_TO
 } from '../constants/actions';
@@ -25,6 +26,9 @@ export const artistListItemSelected = direction =>
 
 export const trackListItemSelected = direction =>
   buildMessage(BROWSER_TRACK_LIST_ITEM_SELECTED, direction);
+
+export const currentTrackListItemPlayed = () =>
+  buildMessage(BROWSER_TRACK_LIST_ITEM_PLAYED, {});
 
 export const listSongsReceived = response =>
   buildMessage(BROWSER_SONGS_LIST_RECEIVED, response);

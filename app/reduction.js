@@ -15,6 +15,11 @@ export default new Record({
       page: startingPage,
       numLines: 0
     },
+    player: {
+      source: 'about:blank',
+      info: null,
+      playing: false
+    },
     browser: {
       typeFocus: 'artistsList',
       artistsListScroll: 0,

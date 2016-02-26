@@ -25,7 +25,8 @@ import {
   listAlbumsRequested,
   artistListItemSelected,
   trackListItemSelected,
-  nextSectionSwitchedTo
+  nextSectionSwitchedTo,
+  currentTrackListItemPlayed
 } from '../actions/PageBrowserActions';
 
 export default class PageBrowser extends PureControllerView {
@@ -33,25 +34,45 @@ export default class PageBrowser extends PureControllerView {
     this.dispatchAction(listArtistsRequested({}));
 
     window.addEventListener('keydown', event => {
+      let stopPropagation = true;
+
       if (event.keyCode === keyMap.tab) {
         // switch active section
-        this._switchToNextSection(event);
+        this._switchToNextSection();
       }
       else {
         switch (this.props.typeFocus) {
         case 'artistsList':
-          if (event.keyCode === keyMap.space) {
-            this._toggleArtistAlbums(event);
-          }
-          else {
-            this._selectArtistListItem(event, keyUpOrDown(event.keyCode));
+          switch (event.keyCode) {
+          case keyMap.space:
+            this._toggleArtistAlbums();
+            break;
+          default:
+            if (!this._selectArtistListItem(keyUpOrDown(event.keyCode))) {
+              stopPropagation = false;
+            }
           }
           break;
         case 'trackList':
-          this._selectTrackListItem(event, keyUpOrDown(event.keyCode));
+          switch (event.keyCode) {
+          case keyMap.enter:
+            // play the song
+            this._playCurrentTrackListItem();
+            break;
+          default:
+            if (!this._selectTrackListItem(keyUpOrDown(event.keyCode))) {
+              stopPropagation = false;
+            }
+          }
           break;
         default:
+          stopPropagation = false;
         }
+      }
+
+      if (stopPropagation) {
+        event.stopPropagation();
+        event.preventDefault();
       }
     });
   }
@@ -147,37 +168,31 @@ export default class PageBrowser extends PureControllerView {
     );
   }
 
-  _selectArtistListItem(event, direction) {
+  _selectArtistListItem(direction) {
     if (direction !== 0) {
-      event.stopPropagation();
-      event.preventDefault();
-
       this.dispatchAction(artistListItemSelected(direction));
     }
   }
 
-  _selectTrackListItem(event, direction) {
+  _selectTrackListItem(direction) {
     if (direction !== 0) {
-      event.stopPropagation();
-      event.preventDefault();
-
       this.dispatchAction(trackListItemSelected(direction));
     }
   }
 
   _toggleArtistAlbums(artist) {
-    event.stopPropagation();
-    event.preventDefault();
-
     this.dispatchAction(listAlbumsRequested({
       toggleHidden: true
     }));
   }
 
-  _switchToNextSection(event) {
+  _switchToNextSection() {
     // switches focus to the next section (e.g. artist list -> track list)
     this.dispatchAction(nextSectionSwitchedTo());
-    event.preventDefault();
+  }
+
+  _playCurrentTrackListItem() {
+    this.dispatchAction(currentTrackListItemPlayed());
   }
 }
 

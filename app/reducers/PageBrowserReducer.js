@@ -3,12 +3,13 @@
  * Browser (page 1) reducers
  */
 
-import { List, fromJS } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import buildMessage from '../MessageBuilder';
 
 import {
-  calculateScrollOffset
+  calculateScrollOffset,
+  formatLeadingZeros
 } from '../common';
 
 import {
@@ -273,3 +274,31 @@ export const switchToNextSection = reduction => {
   return newReduction;
 }
 
+export const playCurrentTrackListItem = reduction => {
+  let newReduction = reduction;
+
+  const currentSelectedSong = reduction.getIn(['appState', 'browser', 'selectedSong']);
+
+  const song = reduction.getIn(['appState', 'browser', 'songs', currentSelectedSong]);
+
+  if (!!song) {
+    newReduction = newReduction.setIn(
+      ['appState', 'player', 'source'], '/api/play/' + song.get(0)
+    ).setIn(
+      ['appState', 'player', 'info'],
+      Map({
+        track:  formatLeadingZeros(song.get(1)),
+        title:  song.get(2),
+        time:   song.get(3),
+        artist: song.get(4),
+        album:  song.get(5),
+        genre:  song.get(6),
+        year:   song.get(7)
+      })
+    ).setIn(
+      ['appState', 'player', 'playing'], true
+    );
+  }
+
+  return newReduction;
+}

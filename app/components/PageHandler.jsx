@@ -19,6 +19,7 @@ import {
 } from '../common';
 
 // load page components
+import Player from './Player.jsx';
 import PageBrowser from './PageBrowser.jsx';
 import PageAllSongs from './PageAllSongs.jsx';
 
@@ -78,8 +79,17 @@ export default class PageHandler extends PureControllerView {
         console.error('Invalid default page set! Check config.js');
     }
 
+    const player = (
+      <Player dispatcher={this.props.dispatcher}
+        source={this.props.player.get('source')}
+        info={this.props.player.get('info')}
+        playing={this.props.player.get('playing')}
+      />
+    );
+
     return (
       <div id="page-outer">
+        {player}
         {pageComponent}
       </div>
     );
@@ -93,6 +103,7 @@ export default class PageHandler extends PureControllerView {
 
 PageHandler.propTypes = {
   page: PropTypes.string,
-  browser: PropTypes.instanceOf(Map)
+  player:   PropTypes.instanceOf(Map),
+  browser:  PropTypes.instanceOf(Map)
 };
 
