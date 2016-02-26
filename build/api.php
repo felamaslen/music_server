@@ -333,7 +333,16 @@ else {
         array_push($artists, $row->artist);
       }
 
-      print json_encode($artists);
+      $query_time = db_query('
+        SELECT SUM({time}) AS full_time FROM {music}
+        ');
+
+      $time = (int)$query_time->fetch_object()->full_time;
+
+      print json_encode(array(
+        'artists' => $artists,
+        'time'    => $time,
+      ));
 
       break;
 

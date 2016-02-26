@@ -21,6 +21,7 @@ import {
 
 // load page components
 import Player from './Player.jsx';
+import StatusBar from './StatusBar.jsx';
 import PageBrowser from './PageBrowser.jsx';
 import PageAllSongs from './PageAllSongs.jsx';
 
@@ -84,10 +85,20 @@ export default class PageHandler extends PureControllerView {
         console.error('Invalid default page set! Check config.js');
     }
 
+    const statusBar = (
+      <StatusBar
+        allTime={this.props.browser.get('allTime')}
+        info={this.props.player.get('info')}
+        playing={this.props.player.get('playing')}
+        playTime={this.props.player.get('playTime')}
+        playPosition={this.props.player.get('playPosition')}
+        volume={this.props.player.get('volume')}
+      />
+    );
+
     const player = (
       <Player dispatcher={this.props.dispatcher}
         source={this.props.player.get('source')}
-        info={this.props.player.get('info')}
         playing={this.props.player.get('playing')}
       />
     );
@@ -96,6 +107,7 @@ export default class PageHandler extends PureControllerView {
       <div id="page-outer">
         {player}
         {pageComponent}
+        {statusBar}
       </div>
     );
   }

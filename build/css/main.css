@@ -21,6 +21,42 @@ body {
   height: 100%;
 }
 
+.player-status-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42px;
+  padding-bottom: 10px;
+  color: #111;
+}
+.player-status-bar .song-info {
+  background: #5373A2;
+  color: #ececec;
+  width: 100%;
+  height: 21px;
+  font-weight: bold;
+}
+.player-status-bar .player-info {
+  background: #ececec;
+  color: #111;
+}
+.info-icon {
+  padding: 0 1em;
+}
+.info-play-position: {
+  padding-right: 1em;
+}
+.info-play-time::before {
+  content: " / ";
+}
+.info-alltime::before {
+  content: " - ";
+}
+.info-volume::before {
+  content: " vol: ";
+}
+
 /* browser page */
 .page-browser {
 }

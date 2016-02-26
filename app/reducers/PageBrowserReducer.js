@@ -62,9 +62,10 @@ export const requestAndInsertListArtists = (reduction, param) => {
 
     if (!badResponse) {
       newReduction = newReduction.setIn(
-        ['appState', 'browser', 'artists'], fromJS(param.response.data)
+        ['appState', 'browser', 'artists'], fromJS(param.response.data.artists)
       )
-      .setIn(['appState', 'browser', 'selectedArtist'], param.response.data.length > 0 ? 0 : -1)
+      .setIn(['appState', 'browser', 'allTime'], parseInt(param.response.data.time))
+      .setIn(['appState', 'browser', 'selectedArtist'], param.response.data.artists.length > 0 ? 0 : -1)
       .setIn(['appState', 'browser', 'selectedAlbum'], -1);
     }
     else {
@@ -293,7 +294,7 @@ export const playCurrentTrackListItem = reduction => {
         artist: song.get(4),
         album:  song.get(5),
         genre:  song.get(6),
-        year:   song.get(7)
+        date:   song.get(7)
       })
     ).setIn(
       ['appState', 'player', 'playing'], true

@@ -18,9 +18,13 @@ export default new Record({
     player: {
       source: 'about:blank',
       info: null,
-      playing: false
+      playing: false,
+      playPosition: 0, // in seconds
+      playTime: null,
+      volume: 100 // 0 <= volume <= 100
     },
     browser: {
+      allTime: 0, // time in seconds of all songs in library
       typeFocus: 'artistsList',
       artistsListScroll: 0,
       artistsListLastScrollDir: 1,

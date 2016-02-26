@@ -3,6 +3,10 @@
  * Defines common methods and static variables
  */
 
+import {
+  numPageLines
+} from './config';
+
 import { List } from 'immutable';
 
 export const urlEncode = _str => {
@@ -62,7 +66,7 @@ export const keyUpOrDown = keyCode => {
   j = j || down || pgdown;
   k = k || up   || pgup;
 
-  return (j ? 1 : (k ? -1 : 0)) * (pgdown || pgup ? 5 : 1);
+  return (j ? 1 : (k ? -1 : 0)) * (pgdown || pgup ? numPageLines : 1);
 }
 
 export const calculateScrollOffset = reduction => {

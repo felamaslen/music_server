@@ -80,7 +80,6 @@ export default class Player extends PureControllerView {
 }
 
 Player.propTypes = {
-  info:     PropTypes.instanceOf(Map),
   playing:  PropTypes.bool,
   source:   PropTypes.string
 };
