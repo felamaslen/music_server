@@ -13,15 +13,19 @@ import {
 } from '../common';
 
 import {
+  ajaxCacheMaxAge
+} from '../config';
+
+import {
   API_LIST_ARTISTS,
   API_LIST_ALBUMS,
   API_BROWSER_LIST_TRACKS
 } from '../constants/effects';
 
-export const insertListSongs = (reduction, response) => {
+export const insertListSongs = (reduction, param) => {
   let newReduction = reduction;
 
-  const clearList = response === null;
+  const clearList = param && param.response === null;
 
   if (clearList) {
     newReduction = newReduction
@@ -29,12 +33,23 @@ export const insertListSongs = (reduction, response) => {
       .setIn(['appState', 'browser', 'selectedSong'], -1);
   }
   else {
-    const badResponse = !response || !response.data || response.status !== 200;
+    const badResponse = !param ||
+      !param.response || !param.response.data || param.response.status !== 200;
 
     if (!badResponse) {
+      const data = fromJS(param.response.data);
+
       newReduction = newReduction
-        .setIn(['appState', 'browser', 'songs'], fromJS(response.data))
+        .setIn(['appState', 'browser', 'songs'], data)
         .setIn(['appState', 'browser', 'selectedSong'], 0);
+
+      // update cache with the result
+      newReduction = newReduction.setIn([
+        'appState', 'browser', 'songCache', param.artist, param.album
+      ], Map({
+        data: data,
+        time: new Date().getTime()
+      }));
     }
     else {
       console.error('[ERROR] API error fetching songs');
@@ -144,6 +159,39 @@ const getArtistAlbums = (albums, artist) => {
   return !!artistAlbums && !artistAlbums.get('hidden') ? artistAlbums.get('list') : List.of();
 }
 
+const _getTrackList = (reduction, artist, album) => {
+  // check if this song list has already been downloaded
+  const cacheItem = reduction.getIn(['appState', 'browser', 'songCache', artist, album]);
+  let cacheItemStale = false;
+
+  if (!!cacheItem) {
+    // check if the cached item is below the maximum cache age
+    const cacheItemAge = (new Date().getTime() - cacheItem.get('time')) / 1000;
+
+    cacheItemStale = cacheItemAge > ajaxCacheMaxAge;
+  }
+
+  const fetchNew = !cacheItem || cacheItemStale;
+
+  let newReduction = reduction;
+
+  if (fetchNew) {
+    newReduction = newReduction.set('effects', newReduction.get('effects').push(
+      buildMessage(
+        API_BROWSER_LIST_TRACKS, {
+          artist,
+          album
+        }
+      )
+    ));
+  }
+  else {
+    newReduction = newReduction.setIn(['appState', 'browser', 'songs'], cacheItem.get('data'));
+  }
+
+  return newReduction;
+}
+
 export const selectArtistListItem = (reduction, direction) => {
   const artists = reduction.getIn(['appState', 'browser', 'artists']);
   const albums = reduction.getIn(['appState', 'browser', 'albums']);
@@ -207,14 +255,7 @@ export const selectArtistListItem = (reduction, direction) => {
     const artist  = artists.get(newSelectedArtist);
     const album   = albums.getIn([artist, 'list', newSelectedAlbum]);
 
-    newReduction = newReduction.set('effects', newReduction.get('effects').push(
-      buildMessage(
-        API_BROWSER_LIST_TRACKS, {
-          artist,
-          album
-        }
-      )
-    ));
+    newReduction = _getTrackList(newReduction, artist, album);
   }
   else {
     // clear the list of songs

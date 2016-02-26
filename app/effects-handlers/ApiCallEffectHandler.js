@@ -53,7 +53,11 @@ export default buildEffectHandler({
               + urlEncode(params.artist) + '/'
               + urlEncode(params.album)
     ).then(
-      response => dispatcher.dispatch(listSongsReceived(response))
+      response => dispatcher.dispatch(listSongsReceived({
+        artist: params.artist,
+        album: params.album,
+        response: response
+      }))
     ).catch(
       () => dispatcher.dispatch(listSongsReceived(null))
     );

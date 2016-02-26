@@ -21,3 +21,7 @@ export const numPageLines = 10;
 export const stoppedIcon  = '.';
 export const pausedIcon   = '|';
 export const playingIcon  = '>';
+
+// 2 hours before reloading each query
+export const ajaxCacheMaxAge = 7200;
+

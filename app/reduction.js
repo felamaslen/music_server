@@ -32,6 +32,7 @@ export default new Record({
       artists: [],
       albums: {}, // map of artist -> albums (List)
       songs: [],  // list of songs currently visible
+      songCache: {}, // map of artist -> album -> songs
       selectedArtist: -1,
       selectedAlbum: -1,
       selectedSong: -1
