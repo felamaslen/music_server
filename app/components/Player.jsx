@@ -13,7 +13,9 @@ import {
 } from '../common';
 
 import {
-  playPauseRequested
+  playPauseRequested,
+  playerEventEnded,
+  playerEventTimeUpdate
 } from '../actions/PlayerActions';
 
 export default class Player extends PureControllerView {
@@ -36,6 +38,20 @@ export default class Player extends PureControllerView {
         event.stopPropagation();
       }
     });
+  }
+
+  componentDidMount() {
+    this.refs.audioElem.addEventListener(
+      'ended',
+      () => this.dispatchAction(playerEventEnded())
+    );
+
+    this.refs.audioElem.addEventListener(
+      'timeupdate',
+      () => this.dispatchAction(playerEventTimeUpdate(
+        this.refs.audioElem.currentTime
+      ))
+    );
   }
 
   componentWillUpdate(nextProps) {

@@ -13,7 +13,7 @@ export const changePage = (reduction, index) => {
   const oldPage = reduction.getIn(['appState', 'app', 'page']);
 
   return typeof newPage !== 'undefined' && newPage !== oldPage ? reduction.setIn(
-    ['appState', 'page'], newPage
+    ['appState', 'app', 'page'], newPage
   ) : reduction;
 }
 
@@ -28,4 +28,9 @@ export const handleWindowResize = reduction => {
   ;
 }
 
+export const storeEventHandler = (reduction, handler) => {
+  return reduction
+    .setIn(['appState', 'eventHandlers', handler.name], handler.func)
+  ;
+}
 

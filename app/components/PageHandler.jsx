@@ -5,7 +5,7 @@
 
 import React, { PropTypes } from 'react';
 import { Dispatcher } from 'flux';
-import { Map } from 'immutable';
+import { List, Map } from 'immutable';
 import classNames from 'classnames';
 import debounce from 'debounce';
 import PureControllerView from './PureControllerView';
@@ -60,6 +60,7 @@ export default class PageHandler extends PureControllerView {
       case 'browser':
         pageComponent = (
           <PageBrowser dispatcher={this.props.dispatcher}
+            events={List.of(this.props.events.get('BrowserKeydown'))}
             typeFocus={this.props.browser.get('typeFocus')}
             artistsListScroll={this.props.browser.get('artistsListScroll')}
             artists={this.props.browser.get('artists')}
@@ -116,6 +117,7 @@ export default class PageHandler extends PureControllerView {
 PageHandler.propTypes = {
   browser:    PropTypes.instanceOf(Map),
   dispatcher: PropTypes.instanceOf(Dispatcher),
+  events:     PropTypes.instanceOf(Map),
   page:       PropTypes.string,
   player:     PropTypes.instanceOf(Map)
 };

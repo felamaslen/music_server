@@ -44,25 +44,26 @@ export default class StatusBar extends PureControllerView {
     // player info (volume, position etc.)
     let infoIcon;
     let playPosition;
-    let playTime;
-    let allTime;
-    let volume;
+    let playTime = null;
+    let volume = null;
+
+    const allTime = <span className="info-alltime">{formatTimeSeconds(this.props.allTime)}</span>;
 
     if (this.props.info === null) {
       // not playing anything
       infoIcon = stoppedIcon;
       playPosition = 0;
-      playTime = null;
     }
     else {
       infoIcon = this.props.playing ? playingIcon : pausedIcon;
+
       playPosition = this.props.playPosition;
+
       playTime = <span className="info-play-time">{formatTimeSeconds(this.props.playTime)}</span>;
+
+      volume = <span className="info-volume">{this.props.volume}</span>;
     }
 
-    allTime = <span className="info-alltime">{formatTimeSeconds(this.props.allTime)}</span>;
-
-    volume        = <span className="info-volume">{this.props.volume}</span>;
     infoIcon      = <span className="info-icon">{infoIcon}</span>;
     playPosition  = <span className="info-play-position">{formatTimeSeconds(playPosition)}</span>;
 

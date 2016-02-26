@@ -6,8 +6,11 @@
 import {
   APP_PAGE_CHANGED,
   APP_WINDOW_RESIZED,
+  APP_EVENT_HANDLER_STORED,
 
   PLAYER_PLAYPAUSE_REQUESTED,
+  PLAYER_EVENT_ENDED,
+  PLAYER_EVENT_TIMEUPDATE,
 
   BROWSER_LIST_ARTISTS_REQUESTED,
   BROWSER_LIST_ALBUMS_REQUESTED,
@@ -20,11 +23,14 @@ import {
 
 import {
   changePage,
-  handleWindowResize
+  handleWindowResize,
+  storeEventHandler
 } from './AppReducer';
 
 import {
-  playPause
+  playPause,
+  audioEnded,
+  audioTimeUpdate
 } from './PlayerReducer';
 
 import {
@@ -43,9 +49,15 @@ export default (reduction, action) => {
       return changePage(reduction, action.payload);
     case APP_WINDOW_RESIZED:
       return handleWindowResize(reduction);
+    case APP_EVENT_HANDLER_STORED:
+      return storeEventHandler(reduction, action.payload);
 
     case PLAYER_PLAYPAUSE_REQUESTED:
       return playPause(reduction);
+    case PLAYER_EVENT_ENDED:
+      return audioEnded(reduction);
+    case PLAYER_EVENT_TIMEUPDATE:
+      return audioTimeUpdate(reduction, action.payload);
 
     case BROWSER_LIST_ARTISTS_REQUESTED:
       return requestAndInsertListArtists(reduction, action.payload);

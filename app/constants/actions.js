@@ -3,10 +3,13 @@
  * Action constants are defined here
  */
 
-export const APP_PAGE_CHANGED = 'a_apc';
-export const APP_WINDOW_RESIZED = 'a_awr';
+export const APP_PAGE_CHANGED         = 'a_apc';
+export const APP_WINDOW_RESIZED       = 'a_awr';
+export const APP_EVENT_HANDLER_STORED = 'a_aeh';
 
 export const PLAYER_PLAYPAUSE_REQUESTED = 'a_pppr';
+export const PLAYER_EVENT_ENDED         = 'a_peen';
+export const PLAYER_EVENT_TIMEUPDATE    = 'a_petu';
 
 export const BROWSER_LIST_ARTISTS_REQUESTED     = 'a_bla';
 export const BROWSER_LIST_ALBUMS_REQUESTED      = 'a_blb';

@@ -46,6 +46,7 @@ export default class App extends Component {
       <main>
         <div id="page-handler-outer">
           <PageHandler dispatcher={this.state.dispatcher}
+            events={this.state.reduction.getIn(['appState', 'eventHandlers'])}
             page={this.state.reduction.getIn(['appState', 'app', 'page'])}
             player={this.state.reduction.getIn(['appState', 'player'])}
             browser={this.state.reduction.getIn(['appState', 'browser'])}

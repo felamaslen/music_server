@@ -15,6 +15,7 @@ export default new Record({
       page: startingPage,
       numLines: 0
     },
+    eventHandlers: {},
     player: {
       source: 'about:blank',
       info: null,

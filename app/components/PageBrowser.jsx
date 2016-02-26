@@ -21,6 +21,10 @@ import {
 } from '../common';
 
 import {
+  eventHandlerStored
+} from '../actions/AppActions';
+
+import {
   listArtistsRequested,
   listAlbumsRequested,
   artistListItemSelected,
@@ -31,54 +35,79 @@ import {
 
 export default class PageBrowser extends PureControllerView {
   componentDidMount() {
-    this.dispatchAction(listArtistsRequested({}));
+    const hasMountedBefore = this.props.artists.size > 0; // TODO: dedicated state value / action
 
-    window.addEventListener('keydown', event => {
-      let stopPropagation = true;
+    if (!hasMountedBefore) {
+      this.dispatchAction(listArtistsRequested({}));
+    }
 
-      if (event.keyCode === keyMap.tab) {
-        // switch active section
-        this._switchToNextSection();
-      }
-      else {
-        switch (this.props.typeFocus) {
-        case 'artistsList':
-          switch (event.keyCode) {
-          case keyMap.space:
-            this._toggleArtistAlbums();
-            break;
-          default:
-            if (!this._selectArtistListItem(keyUpOrDown(event.keyCode))) {
-              stopPropagation = false;
-            }
-          }
-          break;
-        case 'trackList':
-          switch (event.keyCode) {
-          case keyMap.enter:
-            // play the song
-            this._playCurrentTrackListItem();
-            break;
-          default:
-            if (!this._selectTrackListItem(keyUpOrDown(event.keyCode))) {
-              stopPropagation = false;
-            }
-          }
-          break;
-        default:
-          stopPropagation = false;
-        }
-      }
-
-      if (stopPropagation) {
-        event.stopPropagation();
-        event.preventDefault();
-      }
-    });
+    this.dispatchNext(eventHandlerStored({
+      name: 'BrowserKeydown',
+      func: this._keydownEvent.bind(this)
+    }));
   }
 
-  componentDidUpdate() {
+  componentWillUnmount() {
+    // remove all events bound to window, before unmounting
+    window.removeEventListener('keydown', this.props.events.get(0), false);
+
+    this.dispatchNext(eventHandlerStored({
+      name: 'BrowserKeydown',
+      func: null
+    }));
+  }
+
+  componentDidUpdate(prevProps) {
+    const prevEventKeydown = prevProps.events.get(0);
+    const nextEventKeydown = this.props.events.get(0);
+
+    if (!prevEventKeydown && !!nextEventKeydown) {
+      window.addEventListener('keydown', this.props.events.get(0), false);
+    }
+
     this.refs.artistsList.scrollTop = lineHeight * this.props.artistsListScroll;
+  }
+
+  _keydownEvent(event) {
+    let preventDefault = true;
+
+    if (event.keyCode === keyMap.tab) {
+      // switch active section
+      this._switchToNextSection();
+    }
+    else {
+      switch (this.props.typeFocus) {
+      case 'artistsList':
+        switch (event.keyCode) {
+        case keyMap.space:
+          this._toggleArtistAlbums();
+          break;
+        default:
+          if (!this._selectArtistListItem(keyUpOrDown(event.keyCode))) {
+            preventDefault = false;
+          }
+        }
+        break;
+      case 'trackList':
+        switch (event.keyCode) {
+        case keyMap.enter:
+          // play the song
+          this._playCurrentTrackListItem();
+          break;
+        default:
+          if (!this._selectTrackListItem(keyUpOrDown(event.keyCode))) {
+            preventDefault = false;
+          }
+        }
+        break;
+      default:
+        preventDefault = false;
+      }
+    }
+
+    if (preventDefault) {
+      event.preventDefault();
+    }
   }
 
   _renderArtistList() {
@@ -200,6 +229,7 @@ PageBrowser.propTypes = {
   albums: PropTypes.instanceOf(Map),
   artists: PropTypes.instanceOf(List),
   artistsListScroll: PropTypes.number,
+  events: PropTypes.instanceOf(List),
   selectedAlbum: PropTypes.number,
   selectedArtist: PropTypes.number,
   selectedSong: PropTypes.number,
